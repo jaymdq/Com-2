@@ -1,0 +1,1144 @@
+Kismet (http://www.kismetwireless.net)
+Thu Jul 17 11:18:47 2014 - Kismet 2013.03.R0
+-----------------
+
+Network 1: BSSID 00:0C:A3:14:D3:DE
+ Manuf      : RanchoTe
+ First      : Thu Jul 17 11:27:03 2014
+ Last       : Thu Jul 17 11:27:03 2014
+ Type       : probe
+ BSSID      : 00:0C:A3:14:D3:DE
+ Channel    : 0
+ Frequency  : 2457 - 1 packets, 100.00%
+ Max Seen   : 6000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 1
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 1
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 1 packets
+              Thu Jul 17 11:27:03 2014
+ Client 1: MAC 00:0C:A3:14:D3:DE
+  Manuf      : RanchoTe
+  First      : Thu Jul 17 11:27:03 2014
+  Last       : Thu Jul 17 11:27:03 2014
+  Type       : To Distribution
+  MAC        : 00:0C:A3:14:D3:DE
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:27:03 2014
+    Last       : Thu Jul 17 11:27:03 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2457 - 1 packets, 100.00%
+  Max Seen   : 6000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 1
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 1
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 1 packets
+               Thu Jul 17 11:27:03 2014
+Network 2: BSSID 00:13:33:95:E3:F3
+ Manuf      : Baudtec
+ First      : Thu Jul 17 11:37:17 2014
+ Last       : Thu Jul 17 11:37:17 2014
+ Type       : infrastructure
+ BSSID      : 00:13:33:95:E3:F3
+   SSID 1
+    Type       : Beacon
+    SSID       : "11n_AP_Router" 
+    First      : Thu Jul 17 11:37:17 2014
+    Last       : Thu Jul 17 11:37:17 2014
+    Max Rate   : 54.0
+    Beacon     : 10
+    Packets    : 1
+    Encryption : None
+ Channel    : 11
+ Frequency  : 2467 - 1 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 1
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 1
+ Datasize   : 0
+ Last BSSTS : 120884633815
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 1 packets
+              Thu Jul 17 11:37:17 2014
+ Client 1: MAC 00:13:33:95:E3:F3
+  Manuf      : Baudtec
+  First      : Thu Jul 17 11:37:17 2014
+  Last       : Thu Jul 17 11:37:17 2014
+  Type       : From Distribution
+  MAC        : 00:13:33:95:E3:F3
+  Channel    : 11
+  Frequency  : 2467 - 1 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 1
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 1
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 1 packets
+               Thu Jul 17 11:37:17 2014
+Network 3: BSSID 00:13:33:95:F4:54
+ Manuf      : Baudtec
+ First      : Thu Jul 17 11:30:07 2014
+ Last       : Thu Jul 17 11:31:44 2014
+ Type       : infrastructure
+ BSSID      : 00:13:33:95:F4:54
+   SSID 1
+    Type       : Beacon
+    SSID       : "802.11bgn-SSID" 
+    First      : Thu Jul 17 11:30:07 2014
+    Last       : Thu Jul 17 11:31:44 2014
+    Max Rate   : 54.0
+    Beacon     : 10
+    Packets    : 7
+    Encryption : None
+ Channel    : 6
+ Frequency  : 2437 - 7 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 7
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 7
+ Datasize   : 0
+ Last BSSTS : 1643532185815
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 7 packets
+              Thu Jul 17 11:31:44 2014
+ Client 1: MAC 00:13:33:95:F4:54
+  Manuf      : Baudtec
+  First      : Thu Jul 17 11:30:07 2014
+  Last       : Thu Jul 17 11:31:44 2014
+  Type       : From Distribution
+  MAC        : 00:13:33:95:F4:54
+  Channel    : 6
+  Frequency  : 2437 - 7 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 7
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 7
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 7 packets
+               Thu Jul 17 11:31:44 2014
+Network 4: BSSID 00:26:5A:2B:A1:6E
+ Manuf      : D-Link
+ First      : Thu Jul 17 11:19:20 2014
+ Last       : Thu Jul 17 11:43:47 2014
+ Type       : infrastructure
+ BSSID      : 00:26:5A:2B:A1:6E
+   SSID 1
+    Type       : Beacon
+    SSID       : "CASA" 
+    First      : Thu Jul 17 11:19:20 2014
+    Last       : Thu Jul 17 11:43:47 2014
+    Max Rate   : 54.0
+    Beacon     : 10
+    Packets    : 4345
+    Encryption : WPA+PSK
+    Encryption : WPA+TKIP
+    Encryption : WPA+AES-CCM
+ Channel    : 11
+ Frequency  : 2417 - 2 packets, 0.04%
+ Frequency  : 2452 - 1164 packets, 24.38%
+ Frequency  : 2457 - 769 packets, 16.11%
+ Frequency  : 2462 - 1074 packets, 22.50%
+ Frequency  : 2467 - 792 packets, 16.59%
+ Frequency  : 2472 - 973 packets, 20.38%
+ Max Seen   : 54000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 4345
+ Data       : 429
+ Crypt      : 184
+ Fragments  : 0
+ Retries    : 0
+ Total      : 4774
+ Datasize   : 49089
+ Last BSSTS : 825040486721
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 4774 packets
+              Thu Jul 17 11:43:47 2014
+ Client 1: MAC 00:26:5A:2B:A1:6E
+  Manuf      : D-Link
+  First      : Thu Jul 17 11:19:20 2014
+  Last       : Thu Jul 17 11:43:47 2014
+  Type       : From Distribution
+  MAC        : 00:26:5A:2B:A1:6E
+  Channel    : 11
+  Frequency  : 2417 - 2 packets, 0.05%
+  Frequency  : 2452 - 1069 packets, 24.52%
+  Frequency  : 2457 - 726 packets, 16.66%
+  Frequency  : 2462 - 947 packets, 21.73%
+  Frequency  : 2467 - 757 packets, 17.37%
+  Frequency  : 2472 - 858 packets, 19.68%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 4345
+  Data       : 14
+  Crypt      : 14
+  Fragments  : 0
+  Retries    : 0
+  Total      : 4359
+  Datasize   : 3989
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 4359 packets
+               Thu Jul 17 11:43:47 2014
+ Client 2: MAC 20:16:D8:73:24:CE
+  Manuf      : LiteonTe
+  First      : Thu Jul 17 11:39:40 2014
+  Last       : Thu Jul 17 11:43:47 2014
+  Type       : Established
+  MAC        : 20:16:D8:73:24:CE
+  Channel    : 0
+  Frequency  : 2452 - 49 packets, 22.07%
+  Frequency  : 2457 - 36 packets, 16.22%
+  Frequency  : 2462 - 48 packets, 21.62%
+  Frequency  : 2467 - 31 packets, 13.96%
+  Frequency  : 2472 - 58 packets, 26.13%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 0
+  Data       : 222
+  Crypt      : 143
+  Fragments  : 0
+  Retries    : 0
+  Total      : 222
+  Datasize   : 37479
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 222 packets
+               Thu Jul 17 11:43:47 2014
+ Client 3: MAC FC:E5:57:8E:30:65
+  Manuf      : Unknown
+  First      : Thu Jul 17 11:25:38 2014
+  Last       : Thu Jul 17 11:37:08 2014
+  Type       : To Distribution
+  MAC        : FC:E5:57:8E:30:65
+  Channel    : 0
+  Frequency  : 2452 - 46 packets, 23.83%
+  Frequency  : 2457 - 7 packets, 3.63%
+  Frequency  : 2462 - 79 packets, 40.93%
+  Frequency  : 2467 - 4 packets, 2.07%
+  Frequency  : 2472 - 57 packets, 29.53%
+  Max Seen   : 54000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 0
+  Data       : 193
+  Crypt      : 27
+  Fragments  : 0
+  Retries    : 0
+  Total      : 193
+  Datasize   : 7621
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 193 packets
+               Thu Jul 17 11:37:08 2014
+Network 5: BSSID 04:46:65:8E:9D:3E
+ Manuf      : MurataMa
+ First      : Thu Jul 17 11:22:17 2014
+ Last       : Thu Jul 17 11:22:17 2014
+ Type       : probe
+ BSSID      : 04:46:65:8E:9D:3E
+ Channel    : 0
+ Frequency  : 2452 - 2 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 2
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 2
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2 packets
+              Thu Jul 17 11:22:17 2014
+ Client 1: MAC 04:46:65:8E:9D:3E
+  Manuf      : MurataMa
+  First      : Thu Jul 17 11:22:17 2014
+  Last       : Thu Jul 17 11:22:17 2014
+  Type       : To Distribution
+  MAC        : 04:46:65:8E:9D:3E
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:22:17 2014
+    Last       : Thu Jul 17 11:22:17 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2452 - 2 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 2
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 2
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2 packets
+               Thu Jul 17 11:22:17 2014
+Network 6: BSSID 20:16:D8:73:24:CE
+ Manuf      : LiteonTe
+ First      : Thu Jul 17 11:38:41 2014
+ Last       : Thu Jul 17 11:39:35 2014
+ Type       : probe
+ BSSID      : 20:16:D8:73:24:CE
+ Channel    : 0
+ Frequency  : 2427 - 3 packets, 23.08%
+ Frequency  : 2447 - 6 packets, 46.15%
+ Frequency  : 2457 - 2 packets, 15.38%
+ Frequency  : 2467 - 2 packets, 15.38%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 13
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 13
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 13 packets
+              Thu Jul 17 11:39:35 2014
+ Client 1: MAC 20:16:D8:73:24:CE
+  Manuf      : LiteonTe
+  First      : Thu Jul 17 11:38:41 2014
+  Last       : Thu Jul 17 11:39:35 2014
+  Type       : To Distribution
+  MAC        : 20:16:D8:73:24:CE
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:39:35 2014
+    Last       : Thu Jul 17 11:39:35 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2427 - 3 packets, 23.08%
+  Frequency  : 2447 - 6 packets, 46.15%
+  Frequency  : 2457 - 2 packets, 15.38%
+  Frequency  : 2467 - 2 packets, 15.38%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 13
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 13
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 13 packets
+               Thu Jul 17 11:39:35 2014
+Network 7: BSSID 30:19:66:4D:9C:E6
+ Manuf      : SamsungE
+ First      : Thu Jul 17 11:40:23 2014
+ Last       : Thu Jul 17 11:40:23 2014
+ Type       : probe
+ BSSID      : 30:19:66:4D:9C:E6
+ Channel    : 0
+ Frequency  : 2442 - 3 packets, 42.86%
+ Frequency  : 2462 - 4 packets, 57.14%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 7
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 7
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 7 packets
+              Thu Jul 17 11:40:23 2014
+ Client 1: MAC 30:19:66:4D:9C:E6
+  Manuf      : SamsungE
+  First      : Thu Jul 17 11:40:23 2014
+  Last       : Thu Jul 17 11:40:23 2014
+  Type       : To Distribution
+  MAC        : 30:19:66:4D:9C:E6
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:40:23 2014
+    Last       : Thu Jul 17 11:40:23 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2442 - 3 packets, 42.86%
+  Frequency  : 2462 - 4 packets, 57.14%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 7
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 7
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 7 packets
+               Thu Jul 17 11:40:23 2014
+Network 8: BSSID 30:19:66:4D:9F:02
+ Manuf      : SamsungE
+ First      : Thu Jul 17 11:28:52 2014
+ Last       : Thu Jul 17 11:28:52 2014
+ Type       : probe
+ BSSID      : 30:19:66:4D:9F:02
+ Channel    : 0
+ Frequency  : 2457 - 2 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 2
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 2
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2 packets
+              Thu Jul 17 11:28:52 2014
+ Client 1: MAC 30:19:66:4D:9F:02
+  Manuf      : SamsungE
+  First      : Thu Jul 17 11:28:52 2014
+  Last       : Thu Jul 17 11:28:52 2014
+  Type       : To Distribution
+  MAC        : 30:19:66:4D:9F:02
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:28:52 2014
+    Last       : Thu Jul 17 11:28:52 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2457 - 2 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 2
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 2
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2 packets
+               Thu Jul 17 11:28:52 2014
+Network 9: BSSID 40:0E:85:58:FF:F6
+ Manuf      : SamsungE
+ First      : Thu Jul 17 11:20:19 2014
+ Last       : Thu Jul 17 11:20:56 2014
+ Type       : probe
+ BSSID      : 40:0E:85:58:FF:F6
+ Channel    : 0
+ Frequency  : 2437 - 6 packets, 31.58%
+ Frequency  : 2442 - 2 packets, 10.53%
+ Frequency  : 2457 - 6 packets, 31.58%
+ Frequency  : 2462 - 4 packets, 21.05%
+ Frequency  : 2467 - 1 packets, 5.26%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 19
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 19
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 19 packets
+              Thu Jul 17 11:20:56 2014
+ Client 1: MAC 40:0E:85:58:FF:F6
+  Manuf      : SamsungE
+  First      : Thu Jul 17 11:20:19 2014
+  Last       : Thu Jul 17 11:20:56 2014
+  Type       : To Distribution
+  MAC        : 40:0E:85:58:FF:F6
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:20:56 2014
+    Last       : Thu Jul 17 11:20:56 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2437 - 6 packets, 31.58%
+  Frequency  : 2442 - 2 packets, 10.53%
+  Frequency  : 2457 - 6 packets, 31.58%
+  Frequency  : 2462 - 4 packets, 21.05%
+  Frequency  : 2467 - 1 packets, 5.26%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 19
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 19
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 19 packets
+               Thu Jul 17 11:20:56 2014
+Network 10: BSSID 68:76:4F:6A:37:79
+ Manuf      : SonyMobi
+ First      : Thu Jul 17 11:19:42 2014
+ Last       : Thu Jul 17 11:22:43 2014
+ Type       : probe
+ BSSID      : 68:76:4F:6A:37:79
+ Channel    : 0
+ Frequency  : 2437 - 7 packets, 20.00%
+ Frequency  : 2442 - 9 packets, 25.71%
+ Frequency  : 2457 - 13 packets, 37.14%
+ Frequency  : 2467 - 6 packets, 17.14%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 35
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 35
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 35 packets
+              Thu Jul 17 11:22:43 2014
+ Client 1: MAC 68:76:4F:6A:37:79
+  Manuf      : SonyMobi
+  First      : Thu Jul 17 11:19:42 2014
+  Last       : Thu Jul 17 11:22:43 2014
+  Type       : To Distribution
+  MAC        : 68:76:4F:6A:37:79
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:22:43 2014
+    Last       : Thu Jul 17 11:22:43 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2437 - 7 packets, 20.00%
+  Frequency  : 2442 - 9 packets, 25.71%
+  Frequency  : 2457 - 13 packets, 37.14%
+  Frequency  : 2467 - 6 packets, 17.14%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 35
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 35
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 35 packets
+               Thu Jul 17 11:22:43 2014
+Network 11: BSSID 70:54:D2:D6:61:55
+ Manuf      : Pegatron
+ First      : Thu Jul 17 11:19:20 2014
+ Last       : Thu Jul 17 11:43:47 2014
+ Type       : infrastructure
+ BSSID      : 70:54:D2:D6:61:55
+   SSID 1
+    Type       : Beacon
+    SSID       : "Fibertel WiFi934" 
+    First      : Thu Jul 17 11:19:20 2014
+    Last       : Thu Jul 17 11:43:47 2014
+    Max Rate   : 54.0
+    Beacon     : 10
+    Packets    : 3975
+    Encryption : WPA+PSK
+    Encryption : WPA+TKIP
+    Encryption : WPA+AES-CCM
+ Channel    : 11
+ Frequency  : 2427 - 1 packets, 0.02%
+ Frequency  : 2452 - 758 packets, 18.81%
+ Frequency  : 2457 - 1025 packets, 25.44%
+ Frequency  : 2462 - 1048 packets, 26.01%
+ Frequency  : 2467 - 1042 packets, 25.86%
+ Frequency  : 2472 - 155 packets, 3.85%
+ Max Seen   : 11000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 3975
+ Data       : 54
+ Crypt      : 19
+ Fragments  : 0
+ Retries    : 0
+ Total      : 4029
+ Datasize   : 7804
+ Last BSSTS : 6060749208
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 4029 packets
+              Thu Jul 17 11:43:47 2014
+ Client 1: MAC 10:5F:49:C8:EA:D9
+  Manuf      : CiscoSpv
+  First      : Thu Jul 17 11:23:01 2014
+  Last       : Thu Jul 17 11:35:10 2014
+  Type       : From Distribution
+  MAC        : 10:5F:49:C8:EA:D9
+  Channel    : 0
+  Frequency  : 2462 - 19 packets, 100.00%
+  Max Seen   : 11000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 0
+  Data       : 19
+  Crypt      : 19
+  Fragments  : 0
+  Retries    : 0
+  Total      : 19
+  Datasize   : 6964
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 19 packets
+               Thu Jul 17 11:35:10 2014
+ Client 2: MAC 18:00:2D:01:0A:07
+  Manuf      : SonyMobi
+  First      : Thu Jul 17 11:19:48 2014
+  Last       : Thu Jul 17 11:43:31 2014
+  Type       : To Distribution
+  MAC        : 18:00:2D:01:0A:07
+  Channel    : 0
+  Frequency  : 2427 - 1 packets, 2.86%
+  Frequency  : 2452 - 1 packets, 2.86%
+  Frequency  : 2462 - 30 packets, 85.71%
+  Frequency  : 2467 - 2 packets, 5.71%
+  Frequency  : 2472 - 1 packets, 2.86%
+  Max Seen   : 6000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 0
+  Data       : 35
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 35
+  Datasize   : 840
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 35 packets
+               Thu Jul 17 11:43:31 2014
+ Client 3: MAC 70:54:D2:D6:61:55
+  Manuf      : Pegatron
+  First      : Thu Jul 17 11:19:20 2014
+  Last       : Thu Jul 17 11:43:47 2014
+  Type       : From Distribution
+  MAC        : 70:54:D2:D6:61:55
+  Channel    : 11
+  Frequency  : 2452 - 757 packets, 19.04%
+  Frequency  : 2457 - 1025 packets, 25.79%
+  Frequency  : 2462 - 999 packets, 25.13%
+  Frequency  : 2467 - 1040 packets, 26.16%
+  Frequency  : 2472 - 154 packets, 3.87%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 3975
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 3975
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 3975 packets
+               Thu Jul 17 11:43:47 2014
+Network 12: BSSID 7C:DD:90:11:41:74
+ Manuf      : Shenzhen
+ First      : Thu Jul 17 11:40:14 2014
+ Last       : Thu Jul 17 11:40:22 2014
+ Type       : probe
+ BSSID      : 7C:DD:90:11:41:74
+ Channel    : 0
+ Frequency  : 2447 - 2 packets, 33.33%
+ Frequency  : 2457 - 2 packets, 33.33%
+ Frequency  : 2467 - 2 packets, 33.33%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 6
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 6
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 6 packets
+              Thu Jul 17 11:40:22 2014
+ Client 1: MAC 7C:DD:90:11:41:74
+  Manuf      : Shenzhen
+  First      : Thu Jul 17 11:40:14 2014
+  Last       : Thu Jul 17 11:40:22 2014
+  Type       : To Distribution
+  MAC        : 7C:DD:90:11:41:74
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:40:22 2014
+    Last       : Thu Jul 17 11:40:22 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2447 - 2 packets, 33.33%
+  Frequency  : 2457 - 2 packets, 33.33%
+  Frequency  : 2467 - 2 packets, 33.33%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 6
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 6
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 6 packets
+               Thu Jul 17 11:40:22 2014
+Network 13: BSSID 7C:DD:90:11:7E:0D
+ Manuf      : Shenzhen
+ First      : Thu Jul 17 11:27:05 2014
+ Last       : Thu Jul 17 11:27:05 2014
+ Type       : probe
+ BSSID      : 7C:DD:90:11:7E:0D
+ Channel    : 0
+ Frequency  : 2447 - 1 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 1
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 1
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 1 packets
+              Thu Jul 17 11:27:05 2014
+ Client 1: MAC 7C:DD:90:11:7E:0D
+  Manuf      : Shenzhen
+  First      : Thu Jul 17 11:27:05 2014
+  Last       : Thu Jul 17 11:27:05 2014
+  Type       : To Distribution
+  MAC        : 7C:DD:90:11:7E:0D
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:27:05 2014
+    Last       : Thu Jul 17 11:27:05 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2447 - 1 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 1
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 1
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 1 packets
+               Thu Jul 17 11:27:05 2014
+Network 14: BSSID 94:D7:71:39:50:49
+ Manuf      : SamsungE
+ First      : Thu Jul 17 11:43:19 2014
+ Last       : Thu Jul 17 11:43:19 2014
+ Type       : probe
+ BSSID      : 94:D7:71:39:50:49
+ Channel    : 0
+ Frequency  : 2432 - 3 packets, 60.00%
+ Frequency  : 2472 - 2 packets, 40.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 5
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 5
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 5 packets
+              Thu Jul 17 11:43:19 2014
+ Client 1: MAC 94:D7:71:39:50:49
+  Manuf      : SamsungE
+  First      : Thu Jul 17 11:43:19 2014
+  Last       : Thu Jul 17 11:43:19 2014
+  Type       : To Distribution
+  MAC        : 94:D7:71:39:50:49
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:43:19 2014
+    Last       : Thu Jul 17 11:43:19 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+   SSID 2
+    Type       : Probe Request
+    SSID       : 2278
+    First      : Thu Jul 17 11:43:19 2014
+    Last       : Thu Jul 17 11:43:19 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2432 - 3 packets, 60.00%
+  Frequency  : 2472 - 2 packets, 40.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 5
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 5
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 5 packets
+               Thu Jul 17 11:43:19 2014
+Network 15: BSSID B0:79:94:C9:53:10
+ Manuf      : Motorola
+ First      : Thu Jul 17 11:28:54 2014
+ Last       : Thu Jul 17 11:28:54 2014
+ Type       : probe
+ BSSID      : B0:79:94:C9:53:10
+ Channel    : 0
+ Frequency  : 2447 - 6 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 6
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 6
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 6 packets
+              Thu Jul 17 11:28:54 2014
+ Client 1: MAC B0:79:94:C9:53:10
+  Manuf      : Motorola
+  First      : Thu Jul 17 11:28:54 2014
+  Last       : Thu Jul 17 11:28:54 2014
+  Type       : To Distribution
+  MAC        : B0:79:94:C9:53:10
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:28:54 2014
+    Last       : Thu Jul 17 11:28:54 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2447 - 6 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 6
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 6
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 6 packets
+               Thu Jul 17 11:28:54 2014
+Network 16: BSSID B0:DF:3A:4F:32:3C
+ Manuf      : SamsungE
+ First      : Thu Jul 17 11:38:25 2014
+ Last       : Thu Jul 17 11:38:25 2014
+ Type       : probe
+ BSSID      : B0:DF:3A:4F:32:3C
+ Channel    : 0
+ Frequency  : 2457 - 5 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 5
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 5
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 5 packets
+              Thu Jul 17 11:38:25 2014
+ Client 1: MAC B0:DF:3A:4F:32:3C
+  Manuf      : SamsungE
+  First      : Thu Jul 17 11:38:25 2014
+  Last       : Thu Jul 17 11:38:25 2014
+  Type       : To Distribution
+  MAC        : B0:DF:3A:4F:32:3C
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:38:25 2014
+    Last       : Thu Jul 17 11:38:25 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+   SSID 2
+    Type       : Probe Request
+    SSID       : movistar
+    First      : Thu Jul 17 11:38:25 2014
+    Last       : Thu Jul 17 11:38:25 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2457 - 5 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 5
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 5
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 5 packets
+               Thu Jul 17 11:38:25 2014
+Network 17: BSSID C8:BE:19:8A:10:8C
+ Manuf      : D-LinkIn
+ First      : Thu Jul 17 11:19:21 2014
+ Last       : Thu Jul 17 11:43:47 2014
+ Type       : infrastructure
+ BSSID      : C8:BE:19:8A:10:8C
+   SSID 1
+    Type       : Beacon
+    SSID       : "Alfar" 
+    First      : Thu Jul 17 11:19:21 2014
+    Last       : Thu Jul 17 11:43:47 2014
+    Max Rate   : 54.0
+    Beacon     : 10
+    Packets    : 2588
+    Encryption : WPA+PSK
+    Encryption : WPA+TKIP
+    Encryption : WPA+AES-CCM
+ Channel    : 8
+ Frequency  : 2437 - 870 packets, 33.42%
+ Frequency  : 2442 - 817 packets, 31.39%
+ Frequency  : 2447 - 905 packets, 34.77%
+ Frequency  : 2452 - 3 packets, 0.12%
+ Frequency  : 2457 - 6 packets, 0.23%
+ Frequency  : 2462 - 1 packets, 0.04%
+ Frequency  : 2467 - 1 packets, 0.04%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 2588
+ Data       : 15
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 2603
+ Datasize   : 615
+ Last BSSTS : 825628877187
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2603 packets
+              Thu Jul 17 11:43:47 2014
+ Client 1: MAC C8:BE:19:8A:10:8C
+  Manuf      : D-LinkIn
+  First      : Thu Jul 17 11:19:21 2014
+  Last       : Thu Jul 17 11:43:47 2014
+  Type       : From Distribution
+  MAC        : C8:BE:19:8A:10:8C
+  Channel    : 8
+  Frequency  : 2437 - 870 packets, 33.42%
+  Frequency  : 2442 - 817 packets, 31.39%
+  Frequency  : 2447 - 905 packets, 34.77%
+  Frequency  : 2452 - 3 packets, 0.12%
+  Frequency  : 2457 - 6 packets, 0.23%
+  Frequency  : 2462 - 1 packets, 0.04%
+  Frequency  : 2467 - 1 packets, 0.04%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 2588
+  Data       : 15
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 2603
+  Datasize   : 615
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2603 packets
+               Thu Jul 17 11:43:47 2014
+Network 18: BSSID CC:C3:EA:D2:E3:A7
+ Manuf      : Motorola
+ First      : Thu Jul 17 11:40:35 2014
+ Last       : Thu Jul 17 11:40:35 2014
+ Type       : infrastructure
+ BSSID      : CC:C3:EA:D2:E3:A7
+   SSID 1
+    Type       : Beacon
+    SSID       : "XT1032 9242" 
+    First      : Thu Jul 17 11:40:35 2014
+    Last       : Thu Jul 17 11:40:35 2014
+    Max Rate   : 54.0
+    Beacon     : 10
+    Packets    : 2
+    Encryption : None
+ Channel    : 6
+ Frequency  : 2437 - 2 packets, 100.00%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 2
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 2
+ Datasize   : 0
+ Last BSSTS : 132545024390
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2 packets
+              Thu Jul 17 11:40:35 2014
+ Client 1: MAC CC:C3:EA:D2:E3:A7
+  Manuf      : Motorola
+  First      : Thu Jul 17 11:40:35 2014
+  Last       : Thu Jul 17 11:40:35 2014
+  Type       : From Distribution
+  MAC        : CC:C3:EA:D2:E3:A7
+  Channel    : 6
+  Frequency  : 2437 - 2 packets, 100.00%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 2
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 2
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 2 packets
+               Thu Jul 17 11:40:35 2014
+Network 19: BSSID FC:E5:57:8E:30:65
+ Manuf      : Unknown
+ First      : Thu Jul 17 11:19:34 2014
+ Last       : Thu Jul 17 11:33:09 2014
+ Type       : probe
+ BSSID      : FC:E5:57:8E:30:65
+ Channel    : 0
+ Frequency  : 2417 - 4 packets, 1.79%
+ Frequency  : 2422 - 17 packets, 7.62%
+ Frequency  : 2427 - 13 packets, 5.83%
+ Frequency  : 2432 - 6 packets, 2.69%
+ Frequency  : 2437 - 36 packets, 16.14%
+ Frequency  : 2442 - 33 packets, 14.80%
+ Frequency  : 2447 - 37 packets, 16.59%
+ Frequency  : 2452 - 16 packets, 7.17%
+ Frequency  : 2457 - 32 packets, 14.35%
+ Frequency  : 2462 - 14 packets, 6.28%
+ Frequency  : 2467 - 13 packets, 5.83%
+ Frequency  : 2472 - 2 packets, 0.90%
+ Max Seen   : 1000
+ Carrier    : IEEE 802.11b+
+ Encoding   : CCK
+ LLC        : 223
+ Data       : 0
+ Crypt      : 0
+ Fragments  : 0
+ Retries    : 0
+ Total      : 223
+ Datasize   : 0
+ Last BSSTS : 0
+    Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 223 packets
+              Thu Jul 17 11:33:09 2014
+ Client 1: MAC FC:E5:57:8E:30:65
+  Manuf      : Unknown
+  First      : Thu Jul 17 11:19:34 2014
+  Last       : Thu Jul 17 11:33:09 2014
+  Type       : To Distribution
+  MAC        : FC:E5:57:8E:30:65
+   SSID 1
+    Type       : Probe Request
+    SSID       : <cloaked>
+    First      : Thu Jul 17 11:33:09 2014
+    Last       : Thu Jul 17 11:33:09 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+   SSID 2
+    Type       : Probe Request
+    SSID       : CASA
+    First      : Thu Jul 17 11:27:35 2014
+    Last       : Thu Jul 17 11:27:35 2014
+    Max Rate   : 54.0
+    Packets    : 1
+    Encryption : None
+  Channel    : 0
+  Frequency  : 2417 - 4 packets, 1.79%
+  Frequency  : 2422 - 17 packets, 7.62%
+  Frequency  : 2427 - 13 packets, 5.83%
+  Frequency  : 2432 - 6 packets, 2.69%
+  Frequency  : 2437 - 36 packets, 16.14%
+  Frequency  : 2442 - 33 packets, 14.80%
+  Frequency  : 2447 - 37 packets, 16.59%
+  Frequency  : 2452 - 16 packets, 7.17%
+  Frequency  : 2457 - 32 packets, 14.35%
+  Frequency  : 2462 - 14 packets, 6.28%
+  Frequency  : 2467 - 13 packets, 5.83%
+  Frequency  : 2472 - 2 packets, 0.90%
+  Max Seen   : 1000
+  Carrier    : IEEE 802.11b+
+  Encoding   : CCK
+  LLC        : 223
+  Data       : 0
+  Crypt      : 0
+  Fragments  : 0
+  Retries    : 0
+  Total      : 223
+  Datasize   : 0
+     Seen By : hola (wlan0mon) 6e4e0a3a-0d93-11e4-ba59-d1033c18e201 223 packets
+               Thu Jul 17 11:33:09 2014

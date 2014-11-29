@@ -1,0 +1,2 @@
+wlan.fc.type_subtype == 0x04 REQUEST
+wlan.fc.type_subtype == 0x05 RESPONSE
