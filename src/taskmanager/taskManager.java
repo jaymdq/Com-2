@@ -1,3 +1,5 @@
+package taskmanager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -10,7 +12,7 @@ public class taskManager {
 	private static HashMap<Integer, Process> taskmap = new HashMap<Integer, Process>();
 	private static int globalid = 0;
 	
-	public synchronized static int start(String[] command, PrintStream out, PrintStream err, InputStream in) {
+	public synchronized static int start(String[] command, PrintStream out, PrintStream err, InputStream in, HashMap<String,String> environment) {
 		
 		// Creo el process builder
 		ProcessBuilder processbuilder = new ProcessBuilder();		
@@ -21,6 +23,12 @@ public class taskManager {
 		PrintStream realerr = System.err;
 		InputStream realin = System.in;
 		
+		// Seteo contexto
+		if (environment != null) {
+			for (String key: environment.keySet())
+				processbuilder.environment().put(key, environment.get(key));
+		}
+
 		// Redirecciono el out
 		if (out != null)
 			System.setOut(out);
@@ -58,7 +66,22 @@ public class taskManager {
 	}
 	
 	public synchronized static void stop(int id) {
-		taskmap.get(id).destroy();
+		Process p = taskmap.get(id);
+		if (p != null) 
+			p.destroy();
+		taskmap.remove(id);
+	}
+	
+	public static int waitfor(int id) {
+		Process p = taskmap.get(id);
+		if (p != null)
+			try {
+				return p.waitFor();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		return 0;
 	}
 
 }
