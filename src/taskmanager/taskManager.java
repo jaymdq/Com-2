@@ -3,8 +3,6 @@ package taskmanager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.lang.ProcessBuilder.Redirect;
 import java.util.HashMap;
 
 
@@ -18,6 +16,7 @@ public class taskManager {
 		// Creo el process builder
 		ProcessBuilder processbuilder = new ProcessBuilder();		
 		processbuilder.command(command);
+		//processbuilder.redirectErrorStream(true);
 		
 		// Seteo contexto
 		if (environment != null) {

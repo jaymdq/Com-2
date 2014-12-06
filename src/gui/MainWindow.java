@@ -269,6 +269,7 @@ public class MainWindow {
 	}
 	
 	protected void botonRereshClick() {
+		// TODO
 		String command[] = {"bash","./scripts/get_cards.sh"};
 		int idtask = taskManager.start(command, null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -285,12 +286,14 @@ public class MainWindow {
 	}
 
 	private void botonPlayStopClick() {
+		// TODO
 		activo = ! activo;
 		
 		if (activo){
-			killProcess();
+			//killProcess();
 			initCard(tarjetasDisponibles.getSelectedItem().toString());
 			activateMonitor(tarjetasDisponibles.getSelectedItem().toString());
+			tshark(tarjetasDisponibles.getSelectedItem().toString());
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stop.png")));
 		}else{
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
@@ -298,8 +301,24 @@ public class MainWindow {
 			
 	}
 
+	private void tshark(String card) {
+		// TODO
+		String command[] = {"bash","./scripts/tshark.sh",card};
+		int idtask = taskManager.start(command,null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = null;
+			while ( (line=buff.readLine()) != null)
+				escribirConsola(line);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Termino el stream de tshark");
+	}
+
 	private void initCard(String card) {
-		// TODO 
+		// TODO
 		String command[] = {"bash","./scripts/init_card.sh",card};
 		int idtask = taskManager.start(command,null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -311,9 +330,11 @@ public class MainWindow {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		taskManager.waitfor(idtask);
 	}
 
 	private void killProcess() {
+		// TODO
 		String command[] = {"bash","./scripts/kill_process.sh"};
 		int idtask = taskManager.start(command, null);
 		taskManager.waitfor(idtask);
@@ -335,7 +356,11 @@ public class MainWindow {
 	}
 
 	public void escribirConsola(String texto){
-		consola.setText(consola.getText() + texto + "\n");	
+		System.out.println(texto);
+		if (texto == "clear")
+			consola.setText("");
+		else
+			consola.setText(consola.getText() + texto + "\n");	
 	}
 	
 }
