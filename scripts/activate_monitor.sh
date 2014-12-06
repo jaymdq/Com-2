@@ -1,5 +1,4 @@
 # Activa una tarjeta en modo monitor
-echo "----------- Activate monitor -----------"
 MAC_INTERFAZ=`ifconfig "$1" | grep -oE '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}' | awk '{print toupper($0)}'` #extraemos la MAC de la interfaz del comando 'ifconfig'
 if [ "$MAC_INTERFAZ" = "" ] #si la interfaz esta en modo monitor el procedimiento para extraer la MAC es distinto
 then
@@ -14,4 +13,3 @@ else
 	INTERFAZ_MONITOR=$1
 fi
 echo "Interfaz monitor: $INTERFAZ_MONITOR"
-echo "----------------------------------------"

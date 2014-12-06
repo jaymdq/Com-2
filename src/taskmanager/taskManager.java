@@ -16,7 +16,6 @@ public class taskManager {
 		// Creo el process builder
 		ProcessBuilder processbuilder = new ProcessBuilder();		
 		processbuilder.command(command);
-		//processbuilder.redirectErrorStream(true);
 		
 		// Seteo contexto
 		if (environment != null) {
