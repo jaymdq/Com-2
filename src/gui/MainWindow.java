@@ -1,41 +1,32 @@
 package gui;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-
 import java.awt.BorderLayout;
-
 import javax.swing.JPanel;
-
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
-
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
-
 import taskmanager.Card;
+import taskmanager.Card.Config;
 import taskmanager.taskManager;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -48,9 +39,7 @@ import java.util.Vector;
 public class MainWindow {
 
 	private JFrame frame;
-	private JPasswordField passwordRoot;
 	private JEditorPane consola;
-	private boolean activo;
 	private JButton btnStartStop;
 	private JComboBox<Object> tarjetasDisponibles;
 	private HashMap<String,Card> availableCards;
@@ -180,14 +169,7 @@ public class MainWindow {
 		panePrincipal.add(btnRefresh, "2, 4, left, default");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Vector<String> cards = getCards();
-				Set<String> available = availableCards.keySet();
-				available.retainAll(cards);
-				cards.removeAll(available);
-				for (String card : cards)
-					availableCards.put(card, new Card(card,consola));
-				tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
-				selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());
+				botonRefresh();
 			}
 		});
 		
@@ -296,8 +278,19 @@ public class MainWindow {
 			
 	}
 
+	protected void botonRefresh() {
+		Vector<String> cards = getCards();
+		Set<String> available = availableCards.keySet();
+		available.retainAll(cards);
+		cards.removeAll(available);
+		for (String card : cards)
+			availableCards.put(card, new Card(card,consola));
+		tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
+		selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());		
+	}
+
+	// Obtengo las tarjetas disponibles
 	protected Vector<String> getCards() {
-		// TODO
 		String command[] = {"bash","./scripts/get_cards.sh"};
 		int idtask = taskManager.start(command, null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -313,35 +306,40 @@ public class MainWindow {
 		return cards;
 	}
 
+	// Inicia o detiene un monitoreo
 	private void botonPlayStopClick() {
-		// TODO
 		selected.StartStop();
 		setPlayBtn(selected.isActive());
 	}
 
-	
+	// Mata todos los procesos que puedan molestar
 	private void killProcess() {
-		// TODO
 		String command[] = {"bash","./scripts/kill_process.sh"};
 		int idtask = taskManager.start(command, null);
 		taskManager.waitfor(idtask);
 	}
 	
-	public void escribirConsola(String texto){
-		consola.setText(consola.getText() + texto + "\n");
-		System.out.println(texto);
-		//System.out.println(texto);
-		//if (texto == "clear")
-		//	consola.setText("");
-		//else
-	}
-	
+	// Se setea el boton de play/stop
 	private void setPlayBtn(boolean active) {
 		if (active)
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stop.png")));
 		else
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
 
+	}
+	
+	// Cuando se selecciona otra tarjeta se carga su configuración
+	private void loadCard(String newcard) {
+		selected = availableCards.get(newcard);
+		Config config = selected.getConfig();
+		chkBoxAP.setSelected(config.sendAP);
+		chkBoxAll.setSelected(config.sendAll);
+		chkBoxFakeAP.setSelected(config.fakeAp);
+		tiempoEntrePaquetes.setValue(config.timePaq);
+		tiempoEntreEnvios.setValue(config.timeSend);
+		txtServerIP.setValue(config.serverIP);
+		idScanner.setValue(config.idScanner);
+		setPlayBtn(selected.isActive());
 	}
 	
 }

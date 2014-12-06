@@ -11,14 +11,14 @@ public class Card {
 
 	public class Config {
 		
-		private boolean sendAP;
-		private boolean sendAll;
-		private boolean fakeAp;
-		private int timePaq;
-		private int timeSend;
-		private String serverIP;
-		private int idScanner;
-		private Boolean serverStatus;	
+		public boolean sendAP;
+		public boolean sendAll;
+		public boolean fakeAp;
+		public int timePaq;
+		public int timeSend;
+		public String serverIP;
+		public int idScanner;
+		public Boolean serverStatus;	
 		
 		public Config() {
 			sendAP = false;
@@ -45,24 +45,22 @@ public class Card {
 		idChannels = 0;
 		idTshark = 0;
 		active = false;
-		config = new Config();
+		setConfig(new Config());
 		this.console = console;
 		
 	}
 	
 	public void StartStop() {
 		if (!active) {
-			active = true;
 			initCard();
 			activateMonitor();
 			tshark();
 		}
 		else {
-			active = false;
-			taskManager.stop(idTshark);
 			listenerThread.interrupt();
 			desactivateMonitor();
 		}
+		active = !active;
 	}
 	
 	private void initCard() {
@@ -99,9 +97,13 @@ public class Card {
 		idTshark = taskManager.start(command,null);
 		listenerThread = new Thread(new Listener(taskManager.getInputStream(idTshark),console));
 		listenerThread.start();
+		String command2[] = {"bash","./scripts/change_channels.sh"};
+		idChannels = taskManager.start(command2, null);
 	}
 	
 	private void desactivateMonitor() {
+		taskManager.stop(idChannels);
+		taskManager.stop(idTshark);
 		String command[] = {"bash","./scripts/desactivate_monitor.sh",card};
 		int idtask = taskManager.start(command, null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -117,5 +119,13 @@ public class Card {
 	
 	public Boolean isActive() {
 		return active;
+	}
+
+	public Config getConfig() {
+		return config;
+	}
+
+	public void setConfig(Config config) {
+		this.config = config;
 	}
 }

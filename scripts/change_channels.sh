@@ -6,7 +6,9 @@ do
   for CANAL in $CANALES
   do  
     iwconfig mon0 channel $CANAL
-    echo "Canal + $CANAL"
+    
+    echo $CANAL
+    
     sleep 0.001
   done
 done
