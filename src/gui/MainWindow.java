@@ -8,9 +8,6 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
-
-import java.awt.FlowLayout;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -25,17 +22,27 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
+
 import java.awt.Color;
 import java.awt.Font;
+
 import javax.swing.JLabel;
-import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
+
+import taskmanager.taskManager;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Vector;
 
 public class MainWindow {
 
@@ -44,7 +51,7 @@ public class MainWindow {
 	private JEditorPane consola;
 	private boolean activo;
 	private JButton btnStartStop;
-
+	private JComboBox<Object> tarjetasDisponibles;
 	/**
 	 * Launch the application.
 	 */
@@ -141,10 +148,14 @@ public class MainWindow {
 		btnRefresh.setBorder(BorderFactory.createEmptyBorder());
 		btnRefresh.setContentAreaFilled(false);
 		panePrincipal.add(btnRefresh, "2, 4, left, default");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				botonRereshClick();
+			}
+		});
 		
-		JComboBox tarjetasDisponibles = new JComboBox();
+		tarjetasDisponibles = new JComboBox<Object>();
 		tarjetasDisponibles.setFont(new Font("Dialog", Font.BOLD, 16));
-		tarjetasDisponibles.setModel(new DefaultComboBoxModel(new String[] {"wlan0", "wlan1", "wlan2"}));
 		panePrincipal.add(tarjetasDisponibles, "4, 4, fill, default");
 		
 		passwordRoot = new JPasswordField();
@@ -257,25 +268,74 @@ public class MainWindow {
 		
 	}
 	
+	protected void botonRereshClick() {
+		String command[] = {"bash","./scripts/get_cards.sh"};
+		int idtask = taskManager.start(command, null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = null;
+			Vector<String> cards = new Vector<String>();
+			while ( (line=buff.readLine()) != null)
+				cards.add(line);
+			tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(cards.toArray()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void botonPlayStopClick() {
 		activo = ! activo;
 		
 		if (activo){
+			killProcess();
+			initCard(tarjetasDisponibles.getSelectedItem().toString());
+			activateMonitor(tarjetasDisponibles.getSelectedItem().toString());
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stop.png")));
-			
 		}else{
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
-			
 		}
 			
+	}
+
+	private void initCard(String card) {
+		// TODO 
+		String command[] = {"bash","./scripts/init_card.sh",card};
+		int idtask = taskManager.start(command,null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = null;
+			while ( (line=buff.readLine()) != null)
+				escribirConsola(line);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void killProcess() {
+		String command[] = {"bash","./scripts/kill_process.sh"};
+		int idtask = taskManager.start(command, null);
+		taskManager.waitfor(idtask);
+	}
 	
-		escribirConsola("Rocha gay");
+	private void activateMonitor(String card) {
+		// TODO 
+		String command[] = {"bash","./scripts/activate_monitor.sh",card};
+		int idtask = taskManager.start(command, null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = null;
+			while ( (line=buff.readLine()) != null)
+				escribirConsola(line);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void escribirConsola(String texto){
 		consola.setText(consola.getText() + texto + "\n");	
 	}
-	
-	
 	
 }
