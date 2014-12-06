@@ -18,6 +18,7 @@ public class InvocaServicios {
 	public static String SingleFrameRecorder(String data){
 		try {
 			WebServiceStub service = new WebServiceStub("http://190.19.175.174:8008/Monitores.WS/services/WebService?wsdl");
+			
 			WebServiceStub.InsertSingleFrame req = new WebServiceStub.InsertSingleFrame();
 			req.setData(data);			
 			WebServiceStub.InsertSingleFrameResponse res = service.insertSingleFrame(req);

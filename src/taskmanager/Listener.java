@@ -21,17 +21,17 @@ public class Listener implements Runnable {
 	public void run() {
 		try {
 			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		} catch (InterruptedException e1) {	}
+		
 		console.setText("Escuchando paquetes..." + "\n");
 		InputStreamReader inreader = new InputStreamReader(input);
 		BufferedReader buff = new BufferedReader(inreader);
 		try {
 			String line = null;
-			while ( (line=buff.readLine()) != null)
+			while ( (line=buff.readLine()) != null){
+				line = line.replaceAll("\t", "  ");
 				console.setText(console.getText() + line + "\n");
+			}
 		} catch (IOException e) {}
 	}
 

@@ -33,6 +33,7 @@ public class Card {
 	}
 	
 	private String card;
+	private String monitor;
 	private int idChannels;
 	private int idTshark;
 	private boolean active;
@@ -42,6 +43,7 @@ public class Card {
 	
 	public Card(String card, JEditorPane console) {
 		this.card = card;
+		this.monitor = null;
 		idChannels = 0;
 		idTshark = 0;
 		active = false;
@@ -85,15 +87,17 @@ public class Card {
 		BufferedReader buff = new BufferedReader(inreader);
 		try {
 			String line = null;
-			while ( (line=buff.readLine()) != null)
+			while ( (line=buff.readLine()) != null){
 				console.setText(console.getText() + line + "\n");
+				monitor = line.split(": ")[1];
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void tshark() {
-		String command[] = {"bash","./scripts/tshark.sh",card};
+		String command[] = {"bash","./scripts/tshark.sh",monitor};
 		idTshark = taskManager.start(command,null);
 		listenerThread = new Thread(new Listener(taskManager.getInputStream(idTshark),console));
 		listenerThread.start();
@@ -104,7 +108,7 @@ public class Card {
 	private void desactivateMonitor() {
 		taskManager.stop(idChannels);
 		taskManager.stop(idTshark);
-		String command[] = {"bash","./scripts/desactivate_monitor.sh",card};
+		String command[] = {"bash","./scripts/desactivate_monitor.sh",monitor};
 		int idtask = taskManager.start(command, null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
 		BufferedReader buff = new BufferedReader(inreader);

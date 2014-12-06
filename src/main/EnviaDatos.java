@@ -36,7 +36,7 @@ public class EnviaDatos {
 
 
 	public String enviarDatos(String datos){
-		//Se envian datos y se devuelve el resultado de la transacción
+		//Se envian datos y se devuelve el resultado de la transacciï¿½n
 		return MultipleFrameRecorder(datos);		
 	}
 

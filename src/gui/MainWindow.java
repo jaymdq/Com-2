@@ -1,14 +1,19 @@
 package gui;
 
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,25 +21,34 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
+
 import java.awt.Color;
 import java.awt.Font;
+
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
+
 import taskmanager.Card;
 import taskmanager.Card.Config;
 import taskmanager.taskManager;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainWindow {
 
@@ -51,7 +65,9 @@ public class MainWindow {
 	private JSpinner tiempoEntreEnvios;
 	private JFormattedTextField txtServerIP;
 	private JSpinner idScanner;
-	
+	private JLabel txtServerStatus;
+	private JLabel txtUltimaActualizacion;
+
 	/**
 	 * Launch the application.
 	 */
@@ -81,12 +97,21 @@ public class MainWindow {
 	private void initialize() {
 		// Creo ventana
 		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				//
+				for (String c : availableCards.keySet())
+					if (availableCards.get(c).isActive())
+						availableCards.get(c).StartStop();
+			}
+		});
 		frame.setBounds(100, 100, 1200,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setTitle("Probe Radar");
-		
+
 		// Creo panel con columnas
 		JPanel panePrincipal = new JPanel();
 		frame.getContentPane().add(panePrincipal, BorderLayout.WEST);
@@ -105,7 +130,7 @@ public class MainWindow {
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
-			new RowSpec[] {
+				new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -136,23 +161,23 @@ public class MainWindow {
 				RowSpec.decode("default:grow"),}));
 		JScrollPane scrollPane = new JScrollPane();
 		panePrincipal.add(scrollPane, "2, 28, 12, 1, fill, fill");
-		
+
 		// Consola
 		consola = new JEditorPane();
-		consola.setFont(new Font("Dialog", Font.BOLD, 16));
+		consola.setFont(new Font("Monospaced", Font.BOLD, 16));
 		consola.setEditable(false);
 		scrollPane.setViewportView(consola);
-		
+
 		// Creo label de tarjeta de red
 		JLabel lblTarjetaDeRed = new JLabel("Tarjeta de red wireless:");
 		lblTarjetaDeRed.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblTarjetaDeRed, "2, 2, 3, 1");
-		
+
 		// Obtengo todas las tarjetas disponibles
 		availableCards = new HashMap<String,Card>();
 		for (String card: getCards())
 			availableCards.put(card, new Card(card,consola));
-		
+
 		// Lista de tarjetas disponibles
 		tarjetasDisponibles = new JComboBox<Object>();
 		tarjetasDisponibles.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -160,7 +185,7 @@ public class MainWindow {
 		// Seteo las tarjetas iniciales
 		tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
 		selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());
-		
+
 		// Creo boton de actualizar tarjetas
 		JButton btnRefresh = new JButton("");
 		btnRefresh.setIcon(new ImageIcon(MainWindow.class.getResource("/images/refresh.png")));
@@ -172,7 +197,7 @@ public class MainWindow {
 				botonRefresh();
 			}
 		});
-		
+
 		// Boton start/stop
 		btnStartStop = new JButton("");
 		btnStartStop.addActionListener(new ActionListener() {
@@ -185,7 +210,7 @@ public class MainWindow {
 		btnStartStop.setBorder(BorderFactory.createEmptyBorder());
 		btnStartStop.setContentAreaFilled(false);
 		panePrincipal.add(btnStartStop, "12, 2, 1, 3, right, center");
-		
+
 		// Separadores
 		JSeparator separator = new JSeparator();
 		separator.setForeground(Color.LIGHT_GRAY);
@@ -206,17 +231,17 @@ public class MainWindow {
 		chkBoxAP = new JCheckBox("Enviar APs");
 		chkBoxAP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(chkBoxAP, "2, 12, 3, 1, left, default");
-		
+
 		// Checkbox de enviar todo
 		chkBoxAll = new JCheckBox("Enviar todos los paquetes");
 		chkBoxAll.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(chkBoxAll, "2, 14, 3, 1, left, default");
-		
+
 		// CheckBox de ap falso
 		chkBoxFakeAP = new JCheckBox("Fake Ap");
 		chkBoxFakeAP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(chkBoxFakeAP, "2, 16, 3, 1, left, default");
-		
+
 		// Label de tiempo entre paquetes
 		JLabel lblTiempoEntre = new JLabel("Tiempo entre paquetes:");
 		lblTiempoEntre.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -226,7 +251,7 @@ public class MainWindow {
 		tiempoEntrePaquetes.setModel(new SpinnerNumberModel(0, 0, 32000, 1));
 		tiempoEntrePaquetes.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(tiempoEntrePaquetes, "7, 12");
-			
+
 		// Label de tiempo entre envios
 		JLabel lblTiempoEntre_1 = new JLabel("Tiempo entre envios:");
 		lblTiempoEntre_1.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -236,7 +261,7 @@ public class MainWindow {
 		tiempoEntreEnvios.setModel(new SpinnerNumberModel(0, 0, 32000, 1));
 		tiempoEntreEnvios.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(tiempoEntreEnvios, "7, 14");
-		
+
 		// Label de ip de servidor
 		JLabel lblServerIp = new JLabel("Server IP:");
 		lblServerIp.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -247,25 +272,25 @@ public class MainWindow {
 		txtServerIP.setText("190.19.175.174");
 		txtServerIP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtServerIP, "12, 12, fill, default");
-		
+
 		// Label de estatus del servidor
 		JLabel lblServerStatus = new JLabel("Server Status:");
 		lblServerStatus.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblServerStatus, "10, 14");
 		// Status del servidor
-		JLabel txtServerStatus = new JLabel("-");
+		txtServerStatus = new JLabel("-");
 		txtServerStatus.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtServerStatus, "12, 14");
-		
+
 		// Label de ultimo update
 		JLabel lblltimaActualizacin = new JLabel("Última actualización:");
 		lblltimaActualizacin.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblltimaActualizacin, "10, 16");
 		// Ultimo update
-		JLabel txtUltimaActualizacion = new JLabel("-");
+		txtUltimaActualizacion = new JLabel("-");
 		txtUltimaActualizacion.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtUltimaActualizacion, "12, 16");
-		
+
 		// Label de id de scanner
 		JLabel lblIdscanner = new JLabel("ID-Scanner:");
 		lblIdscanner.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -275,8 +300,13 @@ public class MainWindow {
 		idScanner.setFont(new Font("Dialog", Font.BOLD, 16));
 		idScanner.setModel(new SpinnerNumberModel(14, 0, 32000, 1));
 		panePrincipal.add(idScanner, "12, 18");
-			
+
+		
+		
+		probarServidor();
+		
 	}
+
 
 	protected void botonRefresh() {
 		Vector<String> cards = getCards();
@@ -318,7 +348,7 @@ public class MainWindow {
 		int idtask = taskManager.start(command, null);
 		taskManager.waitfor(idtask);
 	}
-	
+
 	// Se setea el boton de play/stop
 	private void setPlayBtn(boolean active) {
 		if (active)
@@ -327,7 +357,7 @@ public class MainWindow {
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
 
 	}
-	
+
 	// Cuando se selecciona otra tarjeta se carga su configuración
 	private void loadCard(String newcard) {
 		selected = availableCards.get(newcard);
@@ -341,5 +371,32 @@ public class MainWindow {
 		idScanner.setValue(config.idScanner);
 		setPlayBtn(selected.isActive());
 	}
-	
+
+	private void probarServidor(){
+		String command[] = {"sh", "-c","ping -c 1 "+ txtServerIP.getText() +" | grep \"received\" | cut -d\",\" -f\"3\" | grep -o '[0-9]*'"};
+		int idtask = taskManager.start(command,null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		
+		try {
+			String line = null;
+			while ( (line=buff.readLine()) != null)
+				if (line.equals("0")){
+					//Servidor y conexion buena
+					txtServerStatus.setText("Buena");
+					txtServerStatus.setForeground( Color.GREEN );
+					txtUltimaActualizacion.setText( new SimpleDateFormat("dd-mm-yyyy HH:mm:ss").format(new Date()) );
+				}else{
+					//Servidor o conexion mala
+					txtServerStatus.setText("Mala");
+					txtServerStatus.setForeground( Color.RED );
+				}
+					
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		taskManager.waitfor(idtask);
+	}
+
+
 }
