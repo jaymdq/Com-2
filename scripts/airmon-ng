@@ -8,9 +8,9 @@ IFACE_FOUND="false"
 MADWIFI=0
 MAC80211=0
 USE_IW=0
-IW_SOURCE="https://www.kernel.org/pub/software/network/iw/iw-3.11.tar.bz2"
+IW_SOURCE="https://www.kernel.org/pub/software/network/iw/iw-3.17.tar.xz"
 IW_ERROR=""
-UDEV_ISSUE=0; GRIS="\033[0;37m"; ROJO="\033[1;31m"; VERDE="\033[1;32m"; printf "$GRIS\n"
+UDEV_ISSUE=0
 
 if [ -f "`which iw 2>&1`" ]
 then
@@ -26,7 +26,7 @@ PROCESSES="wpa_action\|wpa_supplicant\|wpa_cli\|dhclient\|ifplugd\|dhcdbd\|dhcpc
 PS_ERROR="invalid"
 
 usage() {
-	printf "Modo de uso:\n\n  `basename $0` <start|stop|check> <interfaz> [canal o frecuencia]\n"
+	printf "usage: `basename $0` <start|stop|check> <interface> [channel or frequency]\n"
 	echo
 	exit
 }
@@ -44,7 +44,7 @@ startStdIface() {
 	fi
 	iwconfig $1 key off >/dev/null 2>&1
 	ifconfig $1 up
-	printf " ("$VERDE"ACTIVADO"$GRIS")"
+	printf " (monitor mode enabled)"
 }
 
 
@@ -52,7 +52,7 @@ stopStdIface() {
 	ifconfig $1 down >/dev/null 2>&1
 	iwconfig $1 mode Managed >/dev/null 2>&1
 	ifconfig $1 down >/dev/null 2>&1
-	printf " ("$ROJO"DESACTIVADO"$GRIS")"
+	printf " (monitor mode disabled)"
 }
 
 getModule() {
@@ -112,10 +112,10 @@ scanProcesses() {
     if [ $match -gt 0 -a x"$1" != "xkill" ]
     then
         printf "\n\n"
-        echo "Hay $match procesos que pueden causar problemas."
-        echo "Si 'airodump-ng', 'aireplay-ng' o 'airtun-ng'"
-        echo "no funcionan prueba a detener alguno de ellos."
-        echo -e "\nPID\tNombre"
+        echo "Found $match processes that could cause trouble."
+        echo "If airodump-ng, aireplay-ng or airtun-ng stops working after"
+        echo "a short period of time, you may want to kill (some of) them!"
+        echo -e "\nPID\tName"
     else
         if [ x"$1" != "xkill" ]
         then
@@ -125,7 +125,7 @@ scanProcesses() {
 
     if [ $match -gt 0 -a x"$1" = "xkill" ]
     then
-        echo "Deteniendo todos los procesos..."
+        echo "Killing all those processes..."
     fi
 
     i=1
@@ -158,7 +158,7 @@ checkProcessesIface() {
     for i in `ps auxw | grep $1 | grep -v "grep" | grep -v "airmon-ng" | awk '{print $2}'`
     do
         pname=`ps -o comm= -p $i`
-        #echo "Proceso con PID $i ($pname) se está ejecutando en la interfaz $1"
+        echo "Process with PID $i ($pname) is running on interface $1"
     done
 }
 
@@ -183,7 +183,7 @@ getChipset() {
         return
     fi
 
-    CHIPSET="<Desconocido> "
+    CHIPSET="Unknown "
 
     if [ x$DRIVER = "xOtus" -o x$DRIVER = "xarusb_lnx" ]
     then
@@ -195,7 +195,7 @@ getChipset() {
 	CHIPSET=`dmesg | grep TIWLAN | grep CHIP | tail -n 1 | awk -F\  '{ print $6 }'` 
    	if [ x$CHIPSET = "x" ]
 	then
-		CHIPSET="<Desconocido>"
+		CHIPSET="Unknown"
 	else
 		CHIPSET="TI${CHIPSET}"	
 	fi 
@@ -497,7 +497,7 @@ fi
 
 if [ x$USERID != "x" -a x$USERID != "x0" ]
 then
-	echo "Ejecutalo como root" ; exit ;
+	echo Run it as root ; exit ;
 fi
 
 iwpriv > /dev/null 2> /dev/null ||
@@ -523,7 +523,7 @@ then
     fi
 fi
 
-#printf "\n\n"
+printf "\n\n"
 
 if [ $# -ne "0" ]
 then
@@ -544,7 +544,7 @@ then
     SYSFS=1
 fi
 
-printf "INTERFAZ\r\033[16CCHIPSET\r\033[48CDRIVER\n════════\r\033[16C═══════\r\033[48C══════\n"
+printf "Interface\tChipset\t\tDriver\n\n"
 
 
 for iface in `ifconfig -a 2>/dev/null | egrep UNSPEC | sed 's/^\([a-zA-Z0-9_]*\) .*/\1/'`
@@ -593,7 +593,7 @@ do
     fi
     if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
     then
-            echo "$iface no soporta 'stop'. Hazlo en la interfaz 'ath'"
+            echo "$iface does not support 'stop', do it on ath interface"
     fi
     echo
     continue
@@ -617,7 +617,7 @@ do
  then
     getPhy $iface
     getNewMon
-    printf "$iface\r\033[16C$CHIPSET\r\033[48C$DRIVER"
+    printf "$iface\t\t$CHIPSET\t$DRIVER - [$PHYDEV]"
     if [ x$1 = "xstart" ] && [ x$2 = x$iface ]
     then
         if [ $USE_IW = 1 ]
@@ -636,7 +636,7 @@ do
             	    fi
             	fi
                 ifconfig $MONDEV up
-                printf " ("$VERDE"ACTIVADO"$GRIS" en $MONDEV)"
+                printf "\n\t\t\t\t(monitor mode enabled on $MONDEV)"
             else
                 if [ -f /sys/class/ieee80211/"$PHYDEV"/add_iface ]
                 then
@@ -649,9 +649,9 @@ do
                         iwconfig $MONDEV mode Monitor freq "$3"000000 >/dev/null 2>&1
                     fi
                     ifconfig $MONDEV up
-                    printf " ("$VERDE"ACTIVADO"$GRIS" en $MONDEV)"
+                    printf "\n\t\t\t\t(monitor mode enabled on $MONDEV)"
                 else
-                    printf "\n\nERROR: El soporte para 'nl80211' está desactivado en este kernel.\nPor favor, recompila el kernel con soporte para 'nl80211'.\n"
+                    printf "\n\nERROR: nl80211 support is disabled in your kernel.\nPlease recompile your kernel with nl80211 support enabled.\n"
                 fi
             fi
         else
@@ -666,9 +666,9 @@ do
                     iwconfig $MONDEV mode Monitor freq "$3"000000 >/dev/null 2>&1
                 fi
                 ifconfig $MONDEV up
-                printf " ("$VERDE"ACTIVADO"$GRIS" en $MONDEV)"
+                printf "\n\t\t\t\t(monitor mode enabled on $MONDEV)"
             else
-                printf "\n\n"$ROJO"ERROR: Ni la interfaz 'sysfs', ni el comando 'iw' están habilitados.\nPor favor, descarga e instala 'iw' desde\n"$IW_SOURCE"$GRIS\n"
+                printf "\n\nERROR: Neither the sysfs interface links nor the iw command is available.\nPlease download and install iw from\n$IW_SOURCE\n"
             fi
         fi
     fi
@@ -689,7 +689,7 @@ do
                         echo -n "$iface" > /sys/class/ieee80211/"$PHYDEV"/remove_iface
                         printf " (removed)"
                     else
-                        printf "\n\nERROR: El soporte para 'nl80211' está desactivado en este kernel.\nPor favor, recompila el kernel con soporte para 'nl80211'.\n"
+                        printf "\n\nERROR: nl80211 support is disabled in your kernel.\nPlease recompile your kernel with nl80211 support enabled.\n"
                 fi
                 fi
             else
@@ -698,7 +698,7 @@ do
                     echo -n "$iface" > /sys/class/ieee80211/"$PHYDEV"/remove_iface
                     printf " (removed)"
                 else
-                    printf "\n\n"$ROJO"ERROR: Ni la interfaz 'sysfs', ni el comando 'iw' están habilitados.\nPor favor, descarga e instala 'iw' desde\n"$IW_SOURCE"$GRIS\n"
+                    printf "\n\nERROR: Neither the sysfs interface links nor the iw command is available.\nPlease download and install iw from\n$IW_SOURCE\n"
                 fi
 	    fi
         else
@@ -727,14 +727,14 @@ do
         fi
         iwpriv $iface monitor 1 $CH >/dev/null 2>&1
         ifconfig $iface up
-        printf " ("$VERDE"ACTIVADO"$GRIS")"
+        printf " (monitor mode enabled)"
     fi
     if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
     then
         ifconfig $iface down
         iwpriv $iface monitor 0 >/dev/null 2>&1
         iwconfig $iface mode Managed >/dev/null 2>&1
-        printf " ("$ROJO"DESACTIVADO"$GRIS")"
+        printf " (monitor mode disabled)"
     fi
     echo
     continue
@@ -794,7 +794,7 @@ do
     printf "$iface\t\t${CHIPSET}\t\t${DRIVER}"
     if [ x$1 = "xstart" ] && [ x$2 = x$iface ]
     then 
-        printf "\n\t\t\t\tModo monitor no soportado"
+        printf "\n\t\t\t\tMonitor mode not yet supported"
     fi  
     if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
     then 
@@ -809,7 +809,7 @@ do
     MODINFO=`modinfo ipw2200  2>/dev/null | awk '/^version/ {print $2}'`
     if { echo "$MODINFO" | grep -E '^1\.0\.(0|1|2|3)$' ; }
     then
-    	echo "Modo monitor no soportado. Se debe actualizar"
+    	echo "Monitor mode not supported, please upgrade"
     else
 	printf "$iface\t\tIntel 2200BG\tipw2200"
 	if [ x$1 = "xstart" ] && [ x$2 = x$iface ]
@@ -825,7 +825,7 @@ do
 
     	if { echo "$MODINFO" | grep -E '^1\.0\.(5|7|8|11)$' ; }
 	then
-		printf " (AVISO: Versión de módulo no válida. Se debe actualizar)"
+		printf " (Warning: bad module version, you should upgrade)"
 	fi
      fi
      echo
@@ -838,7 +838,7 @@ do
      printf "$iface\t\tNokia 770\t\tcx3110x"
      if [ x$1 = "xstart" ] || [ x$1 = "xstop" ]
      then
-     	printf " (Activacion/Desactivación del modo monitor aún no soportado)"
+     	printf " (Enable/disable monitor mode not yet supported)"
      fi
      echo
      continue
@@ -871,17 +871,17 @@ do
 	if [ x$2 = x$iface ] && [ x$1 = "xstop" ]
 	then
 		wlanconfig $iface destroy
-		printf " (VAP destruido)"
+		printf " (VAP destroyed)"
 	fi
 	if [ x$1 = "xstart" ]
 	then
 		if [ $iface = "$IFACE" ]
 		then
-			printf " ("$VERDE"ACTIVADO"$GRIS")"
+			printf " (monitor mode enabled)"
 		fi
 		if [ x$2 = x$iface ]
 		then
-			printf " (VAP no se puede poner en modo monitor)"
+			printf " (VAP cannot be put in monitor mode)"
 		fi
 	fi
 
@@ -920,7 +920,7 @@ do
              iwconfig $iface mode Monitor freq "$CH"000000
          fi
          iwpriv $iface set_prismhdr 1 >/dev/null 2>&1
-         printf " ("$VERDE"ACTIVADO"$GRIS")"
+         printf " (monitor mode enabled)"
      fi
      if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
      then
@@ -946,7 +946,7 @@ do
          fi
          iwpriv $iface monitor_type 1 >/dev/null 2>&1
          ifconfig $iface up
-         printf " ("$VERDE"ACTIVADO"$GRIS")"
+         printf " (monitor mode enabled)"
      fi
      if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
      then
@@ -970,14 +970,14 @@ do
                            stripfcs=true keepwepflags=true >/dev/null
          echo p2CnfWEPFlags=0,4,7 | wlancfg set $iface
          ifconfig $iface up
-         printf " ("$VERDE"ACTIVADO"$GRIS")"
+         printf " (monitor mode enabled)"
      fi
      if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
      then
          ifconfig $iface down
          wlanctl-ng $iface lnxreq_wlansniff enable=false  >/dev/null
          wlanctl-ng $iface lnxreq_ifstate ifstate=disable >/dev/null
-         printf " ("$ROJO"DESACTIVADO"$GRIS")"
+         printf " (monitor mode disabled)"
      fi
      echo
      continue
@@ -1137,7 +1137,7 @@ do
             iwpriv $iface prismhdr 1 >/dev/null 2>&1
          fi
          ifconfig $iface up
-         printf " ("$VERDE"ACTIVADO"$GRIS")"
+         printf " (monitor mode enabled)"
      fi
      if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
      then
@@ -1166,7 +1166,7 @@ do
              iwpriv $iface rawtx 1 >/dev/null 2>&1
          fi
          ifconfig $iface up
-         printf " ("$VERDE"ACTIVADO"$GRIS")"
+         printf " (monitor mode enabled)"
      fi
      if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
      then
@@ -1287,10 +1287,10 @@ do
 
  if [ x$DRIVER = "xndiswrapper" ] || [ x"`iwpriv $iface 2>/dev/null | grep ndis_reset`" != "x" ]
  then
-     printf "$iface\r\033[16C<Desconocido>\r\033[48Cndiswrapper"
+     printf "$iface\t\tUnknown\t\tndiswrapper"
      if [ x$2 = x$iface ]
      then
-         echo "$ROJO (MODO MONITOR NO SOPORTADO)$GRIS"
+         echo " (MONITOR MODE NOT SUPPORTED)"
      fi
      if [ x$1 = "xstop" ] && [ x$2 = x$iface ]
      then
@@ -1305,7 +1305,7 @@ do
  then
      if [ x$CHIPSET = "x" ]
      then
-         printf "$iface\r\033[16C<Desconocido>\r\033[48C$DRIVER"
+         printf "$iface\t\tUNKNOWN\t\t$DRIVER"
      else
          printf "$iface\t\t$CHIPSET\t\t$DRIVER"
      fi
@@ -1322,14 +1322,14 @@ do
      continue
  fi
 
-printf "$iface\r\033[16CDESCONOCIDO\r\033[48CDESCONOCIDO $ROJO(MODO MONITOR NO SOPORTADO)$GRIS\n"
+printf "$iface\t\tUnknown\t\tUnknown (MONITOR MODE NOT SUPPORTED)\n"
 
 done
 
 echo
 
 if [ $UDEV_ISSUE != 0 ] ; then
-	echo udev renombró la interfaz. Lee lo siguiente para una solución:
+	echo udev renamed the interface. Read the following for a solution:
 	echo http://www.aircrack-ng.org/doku.php?id=airmon-ng#interface_athx_number_rising_ath0_ath1_ath2...._ath45
 	echo 
 fi
