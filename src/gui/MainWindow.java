@@ -31,6 +31,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import taskmanager.Card;
 import taskmanager.Config;
@@ -193,7 +195,17 @@ public class MainWindow {
 		panePrincipal.add(btnRefresh, "2, 4, left, default");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				botonRefresh();
+				Vector<String> cards = getCards();
+				Set<String> available = availableCards.keySet();
+				available.retainAll(cards);
+				cards.removeAll(available);
+				for (String card : cards){
+					Card tarjeta = new Card(card);
+					tarjeta.addObserver(consola);
+					availableCards.put(card, tarjeta);
+				}
+				tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
+				selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());	
 			}
 		});
 
@@ -201,7 +213,13 @@ public class MainWindow {
 		btnStartStop = new JButton("");
 		btnStartStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				botonPlayStopClick();
+				if (selected != null) {
+					if (selected.isActive())
+						selected.stop();
+					else	
+						selected.start();
+					setPlayBtn(selected.isActive());
+				}
 			}
 		});
 		btnStartStop.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -230,17 +248,34 @@ public class MainWindow {
 		chkBoxAP = new JCheckBox("Enviar APs");
 		chkBoxAP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(chkBoxAP, "2, 12, 3, 1, left, default");
-
+		chkBoxAP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (selected != null)
+					selected.getConfig().sendAP = chkBoxAP.isSelected();
+			}
+		});
 		// Checkbox de enviar todo
 		chkBoxAll = new JCheckBox("Enviar todos los paquetes");
 		chkBoxAll.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(chkBoxAll, "2, 14, 3, 1, left, default");
-
+		chkBoxAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (selected != null)
+					selected.getConfig().sendAll = chkBoxAll.isSelected();
+			}
+		});
+		
 		// CheckBox de ap falso
 		chkBoxFakeAP = new JCheckBox("Fake Ap");
 		chkBoxFakeAP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(chkBoxFakeAP, "2, 16, 3, 1, left, default");
-
+		chkBoxFakeAP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (selected != null)
+					selected.getConfig().fakeAp = chkBoxFakeAP.isSelected();
+			}
+		});
+		
 		// Label de tiempo entre paquetes
 		JLabel lblTiempoEntre = new JLabel("Tiempo entre paquetes:");
 		lblTiempoEntre.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -250,7 +285,14 @@ public class MainWindow {
 		tiempoEntrePaquetes.setModel(new SpinnerNumberModel(0, 0, 32000, 1));
 		tiempoEntrePaquetes.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(tiempoEntrePaquetes, "7, 12");
-
+		tiempoEntrePaquetes.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (selected != null)
+					selected.getConfig().timePaq = (int) tiempoEntrePaquetes.getValue();
+			}
+		});
+		
 		// Label de tiempo entre envios
 		JLabel lblTiempoEntre_1 = new JLabel("Tiempo entre envios:");
 		lblTiempoEntre_1.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -260,6 +302,13 @@ public class MainWindow {
 		tiempoEntreEnvios.setModel(new SpinnerNumberModel(0, 0, 32000, 1));
 		tiempoEntreEnvios.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(tiempoEntreEnvios, "7, 14");
+		tiempoEntreEnvios.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (selected != null)
+					selected.getConfig().timeSend = (int) tiempoEntreEnvios.getValue();
+			}
+		});
 
 		// Label de ip de servidor
 		JLabel lblServerIp = new JLabel("Server IP:");
@@ -271,6 +320,7 @@ public class MainWindow {
 		txtServerIP.setText("190.19.175.174");
 		txtServerIP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtServerIP, "12, 12, fill, default");
+		// TODO Listener de la IP del servidor
 
 		// Label de estatus del servidor
 		JLabel lblServerStatus = new JLabel("Server Status:");
@@ -299,30 +349,19 @@ public class MainWindow {
 		idScanner.setFont(new Font("Dialog", Font.BOLD, 16));
 		idScanner.setModel(new SpinnerNumberModel(14, 0, 32000, 1));
 		panePrincipal.add(idScanner, "12, 18");
-				
+		idScanner.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (selected != null)
+					selected.getConfig().idScanner = (int) idScanner.getValue();
+			}
+		});
 		// Leo la primera tarjeta de la lista
 		loadCard(tarjetasDisponibles.getSelectedItem().toString());
 
 	}
 
-	// Click en el boton de refresh
-	protected void botonRefresh() {
-		Vector<String> cards = getCards();
-		Set<String> available = availableCards.keySet();
-		available.retainAll(cards);
-		cards.removeAll(available);
-		for (String card : cards){
-			Card tarjeta = new Card(card);
-			tarjeta.addObserver(consola);
-			availableCards.put(card, tarjeta);
-		}
-		tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
-		selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());		
-	}
-
 	// Obtengo las tarjetas disponibles
-	
-	// Obtiene las tarjetas disponibles
 	protected Vector<String> getCards() {
 		String command[] = {"bash","./scripts/get_cards.sh"};
 		int idtask = taskManager.start(command, null);
@@ -338,30 +377,13 @@ public class MainWindow {
 		}
 		return cards;
 	}
-
-	// Inicia o detiene un monitoreo
-	
-	// Click en start stop
-	private void botonPlayStopClick() {
-		if (selected != null) {
-			if (selected.isActive())
-				selected.stop();
-			else	
-				selected.start();
-			setPlayBtn(selected.isActive());
-		}
-	}
-
-	// Mata todos los procesos que puedan molestar
-	
+		
 	// Mata los procesos que puedan molestar
 	private void killProcess() {
 		String command[] = {"bash","./scripts/kill_process.sh"};
 		int idtask = taskManager.start(command, null);
 		taskManager.waitfor(idtask);
 	}
-
-	// Se setea el boton de play/stop
 
 	// Setea el boton de play/stop
 	private void setPlayBtn(boolean active) {
@@ -373,8 +395,6 @@ public class MainWindow {
 	}
 
 	// Cuando se selecciona otra tarjeta se carga su configuración
-	
-	// Carga una nueva tarjeta seleccionada
 	private void loadCard(String newcard) {
 		Card card = availableCards.get(newcard);
 		if (selected == null | selected != card) {
@@ -395,8 +415,6 @@ public class MainWindow {
 	}
 
 	// Chequea el status del servidor
-	
-	// Testea el status del servidor
 	private void probarServidor(){
 		String command[] = {"sh", "-c","ping -c 1 "+ txtServerIP.getText() +" | grep \"received\" | cut -d\",\" -f\"3\" | grep -o '[0-9]*'"};
 		int idtask = taskManager.start(command,null);
