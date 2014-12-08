@@ -28,7 +28,7 @@ public class Listener extends Observable implements Runnable {
 		BufferedReader buff = new BufferedReader(inreader);
 		try {
 			String line = null;
-			while ( (line=buff.readLine()) != null){
+			while ( (line=buff.readLine()) != null && ! Thread.interrupted() ){
 				line = line.replaceAll("\t", "  ");
 				escribirPorConsola(line);
 			}

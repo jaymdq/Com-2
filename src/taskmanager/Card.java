@@ -84,9 +84,6 @@ public class Card extends Observable{
 	}
 
 	private void activateMonitor() {
-
-		System.out.println(card);
-
 		String command[] = {"bash","./scripts/activate_monitor.sh",card};
 		int idtask = taskManager.start(command, null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -105,7 +102,6 @@ public class Card extends Observable{
 	}
 
 	private void tshark() {
-		System.out.println(monitor);
 		String command[] = {"bash","./scripts/tshark.sh",monitor};
 		idTshark = taskManager.start(command,null);
 		Listener listener = new Listener(taskManager.getInputStream(idTshark));
