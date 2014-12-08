@@ -1,1 +1,1 @@
-sudo bash ./airmon-ng stop $1
+sudo bash ./scripts/airmon-ng stop $1
