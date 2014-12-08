@@ -1,4 +1,4 @@
-package taskmanager;
+package card;
 
 import java.util.Date;
 import java.util.Vector;

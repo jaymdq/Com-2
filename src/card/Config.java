@@ -1,4 +1,4 @@
-package taskmanager;
+package card;
 
 public class Config {
 

@@ -9,6 +9,9 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import card.Card;
+import card.Config;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -34,8 +37,6 @@ import javax.swing.JEditorPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import taskmanager.Card;
-import taskmanager.Config;
 import taskmanager.taskManager;
 
 import java.awt.event.ActionListener;
@@ -420,7 +421,6 @@ public class MainWindow {
 		int idtask = taskManager.start(command,null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
 		BufferedReader buff = new BufferedReader(inreader);
-		
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null)

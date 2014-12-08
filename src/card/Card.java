@@ -1,4 +1,4 @@
-package taskmanager;
+package card;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
+import taskmanager.taskManager;
 
 public class Card extends Observable{
 
