@@ -177,6 +177,7 @@ public class MainWindow {
 		availableCards = new HashMap<String,Card>();
 		for (String card: getCards()){
 			Card tarjeta = new Card(card);
+			// TODO arregalr esto
 			tarjeta.addObserver(consola);
 			availableCards.put(card, tarjeta);
 		}
@@ -187,6 +188,12 @@ public class MainWindow {
 		panePrincipal.add(tarjetasDisponibles, "4, 4, fill, default");
 		// Seteo las tarjetas iniciales
 		tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
+		tarjetasDisponibles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO cambio de tarjeta
+				//System.out.println("Seleccione " + tarjetasDisponibles.getSelectedItem().toString());
+			}
+		});
 		selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());
 
 		// Creo boton de actualizar tarjetas
@@ -303,9 +310,8 @@ public class MainWindow {
 		idScanner.setFont(new Font("Dialog", Font.BOLD, 16));
 		idScanner.setModel(new SpinnerNumberModel(14, 0, 32000, 1));
 		panePrincipal.add(idScanner, "12, 18");
-
 		
-		
+		// TODO Acomodar esto
 		probarServidor();
 		
 	}

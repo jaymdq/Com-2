@@ -50,12 +50,10 @@ public class Card extends Observable{
 		idTshark = 0;
 		active = false;
 		setConfig(new Config());
-
 	}
 
 	public void StartStop() {
 		if (!active) {
-			//killProcess();
 			initCard();
 			activateMonitor();
 			tshark();
@@ -94,6 +92,7 @@ public class Card extends Observable{
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null){
+				System.out.println(line);
 				if (line.contains(":")){
 					escribirPorConsola(line);
 					monitor = line.split(": ")[1];
@@ -105,7 +104,6 @@ public class Card extends Observable{
 	}
 
 	private void tshark() {
-		System.out.println(monitor);
 		String command[] = {"bash","./scripts/tshark.sh",monitor};
 		idTshark = taskManager.start(command,null);
 		Listener listener = new Listener(taskManager.getInputStream(idTshark));
@@ -128,17 +126,9 @@ public class Card extends Observable{
 			while ( (line=buff.readLine()) != null){
 				escribirPorConsola(line);
 			}
-			//console.setText(console.getText() + line + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	// Mata todos los procesos que puedan molestar
-	private void killProcess() {
-		String command[] = {"bash","./scripts/kill_process.sh"};
-		int idtask = taskManager.start(command, null);
-		taskManager.waitfor(idtask);
 	}
 
 	public Boolean isActive() {
