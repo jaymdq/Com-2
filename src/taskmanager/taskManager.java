@@ -17,7 +17,7 @@ public class taskManager {
 		ProcessBuilder processbuilder = new ProcessBuilder();		
 		processbuilder.command(command);
 		// Descomentar para debugear (envia los errores por el output de salida)
-		//processbuilder.redirectErrorStream(true);
+		processbuilder.redirectErrorStream(true);
 		
 		// Seteo contexto
 		if (environment != null) {

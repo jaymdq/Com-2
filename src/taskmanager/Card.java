@@ -1,16 +1,19 @@
 package taskmanager;
 
+import gui.MainWindow;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Observable;
 
 import javax.swing.JEditorPane;
 
-public class Card {
-	
+public class Card extends Observable{
+
 
 	public class Config {
-		
+
 		public boolean sendAP;
 		public boolean sendAll;
 		public boolean fakeAp;
@@ -19,7 +22,7 @@ public class Card {
 		public String serverIP;
 		public int idScanner;
 		public Boolean serverStatus;	
-		
+
 		public Config() {
 			sendAP = false;
 			sendAll = false;
@@ -31,7 +34,7 @@ public class Card {
 			serverStatus = null;
 		}
 	}
-	
+
 	private String card;
 	private String monitor;
 	private int idChannels;
@@ -39,21 +42,20 @@ public class Card {
 	private boolean active;
 	private Config config;
 	private Thread listenerThread;
-	private JEditorPane console;
-	
-	public Card(String card, JEditorPane console) {
+
+	public Card(String card) {
 		this.card = card;
 		this.monitor = null;
 		idChannels = 0;
 		idTshark = 0;
 		active = false;
 		setConfig(new Config());
-		this.console = console;
-		
+
 	}
-	
+
 	public void StartStop() {
 		if (!active) {
+			//killProcess();
 			initCard();
 			activateMonitor();
 			tshark();
@@ -64,7 +66,7 @@ public class Card {
 		}
 		active = !active;
 	}
-	
+
 	private void initCard() {
 		String command[] = {"bash","./scripts/init_card.sh",card};
 		int idtask = taskManager.start(command,null);
@@ -72,15 +74,19 @@ public class Card {
 		BufferedReader buff = new BufferedReader(inreader);
 		try {
 			String line = null;
-			while ( (line=buff.readLine()) != null)
-				console.setText(console.getText() + line + "\n");
+			while ( (line=buff.readLine()) != null){
+				escribirPorConsola(line);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		taskManager.waitfor(idtask);
 	}
-	
+
 	private void activateMonitor() {
+
+		System.out.println(card);
+
 		String command[] = {"bash","./scripts/activate_monitor.sh",card};
 		int idtask = taskManager.start(command, null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -88,23 +94,28 @@ public class Card {
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null){
-				console.setText(console.getText() + line + "\n");
-				monitor = line.split(": ")[1];
+				if (line.contains(":")){
+					escribirPorConsola(line);
+					monitor = line.split(": ")[1];
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void tshark() {
+		System.out.println(monitor);
 		String command[] = {"bash","./scripts/tshark.sh",monitor};
 		idTshark = taskManager.start(command,null);
-		listenerThread = new Thread(new Listener(taskManager.getInputStream(idTshark),console));
+		Listener listener = new Listener(taskManager.getInputStream(idTshark));
+		listener.addObserver(MainWindow.consola);
+		listenerThread = new Thread(listener);
 		listenerThread.start();
 		String command2[] = {"bash","./scripts/change_channels.sh"};
 		idChannels = taskManager.start(command2, null);
 	}
-	
+
 	private void desactivateMonitor() {
 		taskManager.stop(idChannels);
 		taskManager.stop(idTshark);
@@ -114,13 +125,22 @@ public class Card {
 		BufferedReader buff = new BufferedReader(inreader);
 		try {
 			String line = null;
-			while ( (line=buff.readLine()) != null)
-				console.setText(console.getText() + line + "\n");
+			while ( (line=buff.readLine()) != null){
+				escribirPorConsola(line);
+			}
+			//console.setText(console.getText() + line + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// Mata todos los procesos que puedan molestar
+	private void killProcess() {
+		String command[] = {"bash","./scripts/kill_process.sh"};
+		int idtask = taskManager.start(command, null);
+		taskManager.waitfor(idtask);
+	}
+
 	public Boolean isActive() {
 		return active;
 	}
@@ -131,5 +151,10 @@ public class Card {
 
 	public void setConfig(Config config) {
 		this.config = config;
+	}
+
+	private void escribirPorConsola(String line){
+		setChanged();
+		notifyObservers(line);
 	}
 }

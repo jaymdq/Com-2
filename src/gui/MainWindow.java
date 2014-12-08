@@ -44,7 +44,6 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.awt.event.WindowAdapter;
@@ -53,7 +52,6 @@ import java.awt.event.WindowEvent;
 public class MainWindow {
 
 	private JFrame frame;
-	private JEditorPane consola;
 	private JButton btnStartStop;
 	private JComboBox<Object> tarjetasDisponibles;
 	private HashMap<String,Card> availableCards;
@@ -67,6 +65,7 @@ public class MainWindow {
 	private JSpinner idScanner;
 	private JLabel txtServerStatus;
 	private JLabel txtUltimaActualizacion;
+	public static ConsolaObserver consola;
 
 	/**
 	 * Launch the application.
@@ -163,11 +162,12 @@ public class MainWindow {
 		panePrincipal.add(scrollPane, "2, 28, 12, 1, fill, fill");
 
 		// Consola
-		consola = new JEditorPane();
-		consola.setFont(new Font("Monospaced", Font.BOLD, 16));
-		consola.setEditable(false);
-		scrollPane.setViewportView(consola);
-
+		JEditorPane console = new JEditorPane();
+		console.setFont(new Font("Monospaced", Font.BOLD, 16));
+		console.setEditable(false);
+		scrollPane.setViewportView(console);
+		consola = new ConsolaObserver(console);
+		
 		// Creo label de tarjeta de red
 		JLabel lblTarjetaDeRed = new JLabel("Tarjeta de red wireless:");
 		lblTarjetaDeRed.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -175,8 +175,11 @@ public class MainWindow {
 
 		// Obtengo todas las tarjetas disponibles
 		availableCards = new HashMap<String,Card>();
-		for (String card: getCards())
-			availableCards.put(card, new Card(card,consola));
+		for (String card: getCards()){
+			Card tarjeta = new Card(card);
+			tarjeta.addObserver(consola);
+			availableCards.put(card, tarjeta);
+		}
 
 		// Lista de tarjetas disponibles
 		tarjetasDisponibles = new JComboBox<Object>();
@@ -313,8 +316,11 @@ public class MainWindow {
 		Set<String> available = availableCards.keySet();
 		available.retainAll(cards);
 		cards.removeAll(available);
-		for (String card : cards)
-			availableCards.put(card, new Card(card,consola));
+		for (String card : cards){
+			Card tarjeta = new Card(card);
+			tarjeta.addObserver(consola);
+			availableCards.put(card, tarjeta);
+		}
 		tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
 		selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());		
 	}
