@@ -33,7 +33,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
 
 import taskmanager.Card;
-import taskmanager.Card.Config;
+import taskmanager.Config;
 import taskmanager.taskManager;
 
 import java.awt.event.ActionListener;
@@ -83,26 +83,19 @@ public class MainWindow {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+	// Inicializa la ventana
 	public MainWindow() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		// Creo ventana
 		frame = new JFrame();
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				//
 				for (String c : availableCards.keySet())
-					if (availableCards.get(c).isActive())
-						availableCards.get(c).StartStop();
+					availableCards.get(c).stop();
 			}
 		});
 		frame.setBounds(100, 100, 1200,600);
@@ -177,8 +170,6 @@ public class MainWindow {
 		availableCards = new HashMap<String,Card>();
 		for (String card: getCards()){
 			Card tarjeta = new Card(card);
-			// TODO arregalr esto
-			tarjeta.addObserver(consola);
 			availableCards.put(card, tarjeta);
 		}
 
@@ -190,11 +181,9 @@ public class MainWindow {
 		tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
 		tarjetasDisponibles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO cambio de tarjeta
-				//System.out.println("Seleccione " + tarjetasDisponibles.getSelectedItem().toString());
+				loadCard(tarjetasDisponibles.getSelectedItem().toString());
 			}
 		});
-		selected = availableCards.get(tarjetasDisponibles.getSelectedItem().toString());
 
 		// Creo boton de actualizar tarjetas
 		JButton btnRefresh = new JButton("");
@@ -310,13 +299,13 @@ public class MainWindow {
 		idScanner.setFont(new Font("Dialog", Font.BOLD, 16));
 		idScanner.setModel(new SpinnerNumberModel(14, 0, 32000, 1));
 		panePrincipal.add(idScanner, "12, 18");
-		
-		// TODO Acomodar esto
-		probarServidor();
-		
+				
+		// Leo la primera tarjeta de la lista
+		loadCard(tarjetasDisponibles.getSelectedItem().toString());
+
 	}
 
-
+	// Click en el boton de refresh
 	protected void botonRefresh() {
 		Vector<String> cards = getCards();
 		Set<String> available = availableCards.keySet();
@@ -332,6 +321,8 @@ public class MainWindow {
 	}
 
 	// Obtengo las tarjetas disponibles
+	
+	// Obtiene las tarjetas disponibles
 	protected Vector<String> getCards() {
 		String command[] = {"bash","./scripts/get_cards.sh"};
 		int idtask = taskManager.start(command, null);
@@ -349,12 +340,21 @@ public class MainWindow {
 	}
 
 	// Inicia o detiene un monitoreo
+	
+	// Click en start stop
 	private void botonPlayStopClick() {
-		selected.StartStop();
-		setPlayBtn(selected.isActive());
+		if (selected != null) {
+			if (selected.isActive())
+				selected.stop();
+			else	
+				selected.start();
+			setPlayBtn(selected.isActive());
+		}
 	}
 
 	// Mata todos los procesos que puedan molestar
+	
+	// Mata los procesos que puedan molestar
 	private void killProcess() {
 		String command[] = {"bash","./scripts/kill_process.sh"};
 		int idtask = taskManager.start(command, null);
@@ -362,6 +362,8 @@ public class MainWindow {
 	}
 
 	// Se setea el boton de play/stop
+
+	// Setea el boton de play/stop
 	private void setPlayBtn(boolean active) {
 		if (active)
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stop.png")));
@@ -371,19 +373,30 @@ public class MainWindow {
 	}
 
 	// Cuando se selecciona otra tarjeta se carga su configuración
+	
+	// Carga una nueva tarjeta seleccionada
 	private void loadCard(String newcard) {
-		selected = availableCards.get(newcard);
-		Config config = selected.getConfig();
-		chkBoxAP.setSelected(config.sendAP);
-		chkBoxAll.setSelected(config.sendAll);
-		chkBoxFakeAP.setSelected(config.fakeAp);
-		tiempoEntrePaquetes.setValue(config.timePaq);
-		tiempoEntreEnvios.setValue(config.timeSend);
-		txtServerIP.setValue(config.serverIP);
-		idScanner.setValue(config.idScanner);
-		setPlayBtn(selected.isActive());
+		Card card = availableCards.get(newcard);
+		if (selected == null | selected != card) {
+			if (selected != null)
+				selected.deleteObserver(consola);
+			selected = card;
+			Config config = selected.getConfig();
+			chkBoxAP.setSelected(config.sendAP);
+			chkBoxAll.setSelected(config.sendAll);
+			chkBoxFakeAP.setSelected(config.fakeAp);
+			tiempoEntrePaquetes.setValue(config.timePaq);
+			tiempoEntreEnvios.setValue(config.timeSend);
+			txtServerIP.setValue(config.serverIP);
+			idScanner.setValue(config.idScanner);
+			setPlayBtn(selected.isActive());
+			card.addObserver(consola);
+		}
 	}
 
+	// Chequea el status del servidor
+	
+	// Testea el status del servidor
 	private void probarServidor(){
 		String command[] = {"sh", "-c","ping -c 1 "+ txtServerIP.getText() +" | grep \"received\" | cut -d\",\" -f\"3\" | grep -o '[0-9]*'"};
 		int idtask = taskManager.start(command,null);

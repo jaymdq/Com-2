@@ -6,14 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Observable;
 
-import javax.swing.JEditorPane;
-
 public class Listener extends Observable implements Runnable {
 
+	private Card card;
 	private InputStream input;
 	
-	public Listener(InputStream input) {
+	public Listener(InputStream input, Card card) {
 		this.input = input;
+		this.card = card;
 	}
 	
 	@Override
@@ -21,28 +21,16 @@ public class Listener extends Observable implements Runnable {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e1) {	}
-		
-		limpiarConsola();
-		escribirPorConsola("Escuchando paquetes..." );
+
 		InputStreamReader inreader = new InputStreamReader(input);
 		BufferedReader buff = new BufferedReader(inreader);
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null && ! Thread.interrupted() ){
-				line = line.replaceAll("\t", "  ");
-				escribirPorConsola(line);
+				System.out.println(line);
+				card.listen(line);
 			}
 		} catch (IOException e) {}
 	}
 
-	
-	private void escribirPorConsola(String line){
-		setChanged();
-		notifyObservers(line);
-	}
-	
-	private void limpiarConsola(){
-		setChanged();
-		notifyObservers();
-	}
 }

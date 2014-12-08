@@ -1,16 +1,10 @@
-CANALES=`iw list | grep dBm | cut -d' ' -f 4 | egrep -o [[:digit:]]*`
+CANALES=`iwlist $1 frequency | egrep -o "Channel [[:digit:]]* :" | cut -d ' ' -f2`
 
-echo $CANALES
 while (true)
 do
   for CANAL in $CANALES
   do  
-    iwconfig mon0 channel $CANAL
-    
-    echo $CANAL
-    
+    iwconfig $1 channel $CANAL   
     sleep 0.001
   done
 done
-
-

@@ -1,1 +1,1 @@
-./airmon-ng stop $1 > /dev/null 2>&1
+sudo bash ./airmon-ng stop $1

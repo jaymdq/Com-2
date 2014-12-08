@@ -15,15 +15,10 @@ public class ConsolaObserver implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
-		if (arg1 == null){
-			//Se limpia la consola
-			consola.setText("");
-		}else{
-			String texto = (String) arg1;
-			consola.setText(consola.getText() + texto + "\n");	
+		if (arg1 != null){
+			String text = (String) arg1;
+			consola.setText(text);
 		}
-
 	}
 
 }
