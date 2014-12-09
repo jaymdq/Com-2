@@ -1,0 +1,12 @@
+0x00	Asociacion Request
+0x01	Asociacion Response
+0x02	Reasociacion Request
+0x03	Reasociacion Response
+0x04	Probe Request
+0x05	Probe Response
+0x08	Beacon
+0x0a	Disociacion
+0x0b	Autenticacion
+0x0c	Desautenticacion
+0x0d	Action
+0x24	Frame de flags

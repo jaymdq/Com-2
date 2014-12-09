@@ -6,11 +6,12 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import taskmanager.taskManager;
 
 public class Card extends Observable{
-
+	
 	private String card;
 	private String monitor;
 	private int idChannels;
@@ -21,6 +22,15 @@ public class Card extends Observable{
 	private String status;
 	private HashMap<String, AP> aps;
 	private HashMap<String, Client> clients;
+	private static Vector<String> allowedtypes;
+	
+	// Agreaga un tipo aceptado por el programa
+	public static void addTypes(String type) {
+		if (allowedtypes == null)
+			allowedtypes = new Vector<String>();
+		if (!allowedtypes.contains(type))
+			allowedtypes.add(type);
+	}
 	
 	// Create a new card
 	public Card(String card) {
@@ -41,8 +51,7 @@ public class Card extends Observable{
 			activateMonitor();
 			tshark();
 			if (listenerThread != null) {
-				if (config.sendAP)
-					aps = new HashMap<String,AP>();
+				aps = new HashMap<String,AP>();
 				clients = new HashMap<String,Client>();
 				active = true;
 			}
@@ -153,27 +162,47 @@ public class Card extends Observable{
 		return toreturn;
 	}
 	
-	public void listen(String packet) {
-		// Esto deberia leer la linea, parsearla y toda la bldes
-		// Verificar si debo enviarlo o no al servidor (segun los tiempos entre paq)
-		// Si lo debo enviar entonces debo actualizar la consola
-		// Si actualizo la consola entonces hago un "notifyObservers"
-		
-		// Si es un proberequest -->
-		String[] parseado = packet.split("	");
-		if (parseado.length > 1) {
-			if (!clients.containsKey(parseado[1]))
-				clients.put(parseado[1],new Client(parseado));
-			else
-				clients.get(parseado[1]).update(parseado);
+	public void listen(String line) {		
+		String[] parseado = line.split("	");
+		Packet packet = new Packet(parseado);
+		if (allowedtypes.contains(packet.type)) {
+			if (aps.containsKey(packet.origen) || packet.type.equals(Packet.BEACON) || packet.type.equals(Packet.PROBERESP) || packet.type.equals(Packet.ASSOCIATIONRESP) || packet.type.equals(Packet.ACTION) || packet.type.equals(Packet.REASSOCIATIONRESP)) {
+				updateAP(packet);
+				if (clients.containsKey(packet.origen))
+					clients.remove(packet.origen);
+				if (config.sendAP) {
+					// TODO Enviar al servidor
+					setChanged();
+					notifyObservers(toString());
+				}	
+			}
+			else {
+				updateClient(packet);
+				if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
+					// TODO Enviar al servidor
+				}
+				setChanged();
+				notifyObservers(toString());
+			}
 		}
-		
-		setChanged();
-		notifyObservers(toString());
+	}
+	
+	private void updateAP(Packet packet) {
+		if (aps.containsKey(packet.origen))
+			aps.get(packet.origen).update(packet);
+		else
+			aps.put(packet.origen, new AP(packet));
+	}
+	
+	private void updateClient(Packet packet) {
+		if (clients.containsKey(packet.origen))
+			clients.get(packet.origen).update(packet);
+		else
+			clients.put(packet.origen, new Client(packet));
 	}
 	
 	public void setStatus(String line) {
-		if (line == "")
+		if (line.equals(""))
 			status = "";
 		else
 			status = status + line + "\n";
@@ -186,4 +215,5 @@ public class Card extends Observable{
 		setChanged();
 		notifyObservers(toString());
 	}
+
 }

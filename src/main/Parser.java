@@ -20,8 +20,6 @@ public class Parser implements Runnable{
 		this.listaAParsear = new Vector<String>();
 		this.activo = false;
 		this.idScanner = idScanner;
-
-
 	}
 
 
@@ -94,7 +92,7 @@ public class Parser implements Runnable{
 
 		while (activo){
 
-			//El Parser se duerme en caso de que la lista se encuentra vacía.
+			//El Parser se duerme en caso de que la lista se encuentra vacï¿½a.
 			synchronized (listaAParsear) {
 				while (listaAParsear.isEmpty())
 					try {

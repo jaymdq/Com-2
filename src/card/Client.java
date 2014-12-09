@@ -12,27 +12,51 @@ public class Client {
 	public int packets;
 	public Vector<String> probes;
 	public Date last;
+	private final String NOASSOCIATED = "(not associated)";
 	
-	
-	public Client(String[] parseado) {
-		// TODO
+	public Client(Packet packet) {
 		probes = new Vector<String>();
-		station = parseado[1];
-		bssid = parseado[2];
-		power = Integer.parseInt(parseado[3]);
+		station = packet.origen;
+		power = packet.pwr;
 		packets = 1;
+		last = packet.time;
+		bssid = NOASSOCIATED;
+
+		switch (packet.type) {
+			case (Packet.PROBEREQ) :
+				if (!packet.essid.equals(""))
+					probes.add(packet.essid);
+				break;
+			case (Packet.FLAGSFRAME) :
+				bssid = packet.destino;
+				break;
+		}
 	}
 
 	// String que iria en la consola
 	public String toString() {
-		// TODO Aca deberia imprimri los datos del cliente de forma tabulada 
-		return "(not associated)"+ "	" + station + "	" +  power + "	" +  packets + "		" +  probes.toString();
+		// TODO Aca deberia detectar si esta o no asociado a una red..
+		return bssid + "	" + station + "	" +  power + "	" +  packets + "		" +  probes.toString();
 	}
 	
-	public void update(String[] parseado) {
-		// TODO
-		power = Integer.parseInt(parseado[3]);
+	// Nuevo paquete que llega
+	public void update(Packet packet) {
+		// TODO Deberia verificar las diferencias de tiempo y actualizar el tiempo
+		power = packet.pwr;
 		packets++;
+		
+		switch (packet.type) {
+			case (Packet.PROBEREQ) :
+				if (!packet.essid.equals("") && !probes.contains(packet.essid))
+					probes.add(packet.essid);
+				break;
+			case (Packet.DISOCIATION) :
+				bssid = NOASSOCIATED;
+				break;
+			case (Packet.FLAGSFRAME) :
+				bssid = packet.destino;
+				break;
+		}
 	}
 
 }

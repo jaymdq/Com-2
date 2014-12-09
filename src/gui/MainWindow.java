@@ -88,6 +88,15 @@ public class MainWindow {
 
 	// Inicializa la ventana
 	public MainWindow() {
+		String[] command = {"bash","-c","cat ./scripts/allowedtypes.txt"};
+		int idtask = taskManager.start(command, null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = null;
+			while ( (line=buff.readLine()) != null)
+				Card.addTypes(line.substring(0,4));
+		} catch (IOException e) {}
 		initialize();
 	}
 
