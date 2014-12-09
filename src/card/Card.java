@@ -141,14 +141,14 @@ public class Card extends Observable{
 			toreturn = status;
 		else {
 			if (config.sendAP) {
-				toreturn.concat(AP.TITLE + "\n");
+				toreturn = toreturn + AP.TITLE + "\n";
 				for (AP ap : aps.values())
-					toreturn.concat(ap.toString() + "\n");
-				toreturn.concat("\n");
+					toreturn = toreturn + ap.toString() + "\n";
+				toreturn= toreturn + "\n";
 			}
-			toreturn.concat(Client.TITLE + "\n");
+			toreturn = toreturn + Client.TITLE + "\n";
 			for (Client client : clients.values())
-				toreturn.concat(client.toString() + "\n");
+				toreturn = toreturn + client.toString() + "\n";
 		}
 		return toreturn;
 	}
@@ -158,6 +158,16 @@ public class Card extends Observable{
 		// Verificar si debo enviarlo o no al servidor (segun los tiempos entre paq)
 		// Si lo debo enviar entonces debo actualizar la consola
 		// Si actualizo la consola entonces hago un "notifyObservers"
+		
+		// Si es un proberequest -->
+		String[] parseado = packet.split("	");
+		if (parseado.length > 1) {
+			if (!clients.containsKey(parseado[1]))
+				clients.put(parseado[1],new Client(parseado));
+			else
+				clients.get(parseado[1]).update(parseado);
+		}
+		
 		setChanged();
 		notifyObservers(toString());
 	}

@@ -321,7 +321,7 @@ public class MainWindow {
 		txtServerIP.setText("190.19.175.174");
 		txtServerIP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtServerIP, "12, 12, fill, default");
-		// TODO Listener de la IP del servidor
+		// TODO - Listener de la IP del servidor
 
 		// Label de estatus del servidor
 		JLabel lblServerStatus = new JLabel("Server Status:");
@@ -380,6 +380,7 @@ public class MainWindow {
 	}
 		
 	// Mata los procesos que puedan molestar
+	// TODO que garcha hacemos con esto?
 	private void killProcess() {
 		String command[] = {"bash","./scripts/kill_process.sh"};
 		int idtask = taskManager.start(command, null);
@@ -416,6 +417,7 @@ public class MainWindow {
 	}
 
 	// Chequea el status del servidor
+	// TODO que garcha hacemos con esto?
 	private void probarServidor(){
 		String command[] = {"sh", "-c","ping -c 1 "+ txtServerIP.getText() +" | grep \"received\" | cut -d\",\" -f\"3\" | grep -o '[0-9]*'"};
 		int idtask = taskManager.start(command,null);

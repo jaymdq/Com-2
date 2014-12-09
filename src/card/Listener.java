@@ -27,7 +27,6 @@ public class Listener extends Observable implements Runnable {
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null && ! Thread.interrupted() ){
-				System.out.println(line);
 				card.listen(line);
 			}
 		} catch (IOException e) {}
