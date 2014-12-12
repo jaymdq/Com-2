@@ -21,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
@@ -51,6 +52,8 @@ import java.util.Set;
 import java.util.Vector;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class MainWindow {
 
@@ -64,12 +67,12 @@ public class MainWindow {
 	private JCheckBox chkBoxFakeAP;
 	private JSpinner tiempoEntrePaquetes;
 	private JSpinner tiempoEntreEnvios;
-	private JFormattedTextField txtServerIP;
+	private JTextField txtServerIP;
 	private JSpinner idScanner;
 	private JLabel txtServerStatus;
 	private JLabel txtUltimaActualizacion;
 	private Updater updater;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -171,7 +174,7 @@ public class MainWindow {
 		console.setFont(new Font("Monospaced", Font.BOLD, 16));
 		console.setEditable(false);
 		scrollPane.setViewportView(console);
-		
+
 		// Creo label de tarjeta de red
 		JLabel lblTarjetaDeRed = new JLabel("Tarjeta de red wireless:");
 		lblTarjetaDeRed.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -273,7 +276,7 @@ public class MainWindow {
 					selected.getConfig().sendAll = chkBoxAll.isSelected();
 			}
 		});
-		
+
 		// CheckBox de ap falso
 		chkBoxFakeAP = new JCheckBox("Fake Ap");
 		chkBoxFakeAP.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -284,7 +287,7 @@ public class MainWindow {
 					selected.getConfig().fakeAp = chkBoxFakeAP.isSelected();
 			}
 		});
-		
+
 		// Label de tiempo entre paquetes
 		JLabel lblTiempoEntre = new JLabel("Tiempo entre paquetes:");
 		lblTiempoEntre.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -301,7 +304,7 @@ public class MainWindow {
 					selected.getConfig().timePaq = (int) tiempoEntrePaquetes.getValue();
 			}
 		});
-		
+
 		// Label de tiempo entre envios
 		JLabel lblTiempoEntre_1 = new JLabel("Tiempo entre envios:");
 		lblTiempoEntre_1.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -324,12 +327,50 @@ public class MainWindow {
 		lblServerIp.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblServerIp, "10, 12");
 		// IP del servidor
-		txtServerIP = new JFormattedTextField(new IPAddressFormatter()	);
+		txtServerIP = new JTextField();
+		txtServerIP.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				//Acá se le pasa a la clase card la nueva ip
+
+				//Primero se verifica que sea válida
+				String arreglo[] = txtServerIP.getText().split(".");
+				boolean condicion = true;
+				for ( int i = 0; i < arreglo.length ; i++){
+					short num = -1;
+					try{
+						num = (short) Integer.parseInt(arreglo[i]);
+					} catch (Exception e ){ 
+						condicion = false;
+					}
+					if (num < 0 && num > 255){
+						//Inválido
+						condicion = false;
+					}
+				}
+
+				//Si es válido se envia
+				if (condicion){
+					txtServerIP.setForeground( Color.GREEN );
+					if (selected != null)
+						selected.getConfig().serverIP = txtServerIP.getText();
+				}else{
+					txtServerIP.setForeground( Color.RED );
+				}
+
+
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				txtServerIP.setForeground( Color.BLACK );
+			}
+		});
 		txtServerIP.setColumns(15);
 		txtServerIP.setText("190.19.175.174");
 		txtServerIP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtServerIP, "12, 12, fill, default");
-		// TODO - Listener de la IP del servidor
 
 		// Label de estatus del servidor
 		JLabel lblServerStatus = new JLabel("Server Status:");
@@ -365,12 +406,12 @@ public class MainWindow {
 					selected.getConfig().idScanner = (int) idScanner.getValue();
 			}
 		});
-		
+
 		// El actualizador de tarjeta
 		updater = new Updater(console,txtUltimaActualizacion,txtServerStatus);
 		Thread t = new Thread(updater);
 		t.start();
-		
+
 		// Leo la primera tarjeta de la lista
 		if (tarjetasDisponibles.getSelectedItem() != null)
 			loadCard(tarjetasDisponibles.getSelectedItem().toString());
@@ -393,7 +434,7 @@ public class MainWindow {
 		}
 		return cards;
 	}
-		
+
 	// Mata los procesos que puedan molestar
 	// TODO que garcha hacemos con esto?
 	private void killProcess() {
@@ -449,7 +490,7 @@ public class MainWindow {
 					txtServerStatus.setText("Mala");
 					txtServerStatus.setForeground( Color.RED );
 				}
-					
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
