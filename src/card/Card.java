@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Vector;
 
 import taskmanager.taskManager;
 
-public class Card extends Observable{
+public class Card {
 	
 	private String card;
 	private String monitor;
@@ -23,6 +21,8 @@ public class Card extends Observable{
 	private HashMap<String, AP> aps;
 	private HashMap<String, Client> clients;
 	private static Vector<String> allowedtypes;
+	private String serverStatus;
+	private String lastUpdate;
 	
 	// Agreaga un tipo aceptado por el programa
 	public static void addTypes(String type) {
@@ -44,7 +44,7 @@ public class Card extends Observable{
 	}
 
 	// Start
-	public void start() {
+	public synchronized void start() {
 		if (!active) {
 			setStatus("");
 			initCard();
@@ -59,12 +59,14 @@ public class Card extends Observable{
 	}
 
 	// Stop
-	public void stop() {
+	public synchronized void stop() {
 		if (active) {
 			active = false;
 			setStatus("");
-			if (listenerThread != null)
+			if (listenerThread != null) {
 				listenerThread.interrupt();
+				listenerThread = null;
+			}
 			desactivateMonitor();
 		}
 	}
@@ -95,10 +97,12 @@ public class Card extends Observable{
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null){
-				setStatus(line);
-				if (line.contains("mon")){
+				if (line.contains("mon")) {
+					setStatus("Monitor activado: " + line);
 					monitor = line;
 				}
+				else 
+					setStatus(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -144,17 +148,15 @@ public class Card extends Observable{
 	}
 
 	// String que iria a la consola
-	public String toString() {
+	public synchronized String toString() {
 		String toreturn = new String();
 		if (!active)
 			toreturn = status;
 		else {
-			if (config.sendAP) {
-				toreturn = toreturn + AP.TITLE + "\n";
-				for (AP ap : aps.values())
-					toreturn = toreturn + ap.toString() + "\n";
-				toreturn= toreturn + "\n";
-			}
+			toreturn = toreturn + AP.TITLE + "\n";
+			for (AP ap : aps.values())
+				toreturn = toreturn + ap.toString() + "\n";
+			toreturn= toreturn + "\n";
 			toreturn = toreturn + Client.TITLE + "\n";
 			for (Client client : clients.values())
 				toreturn = toreturn + client.toString() + "\n";
@@ -162,27 +164,24 @@ public class Card extends Observable{
 		return toreturn;
 	}
 	
-	public void listen(String line) {		
+	public synchronized void listen(String line) {		
 		String[] parseado = line.split("	");
 		Packet packet = new Packet(parseado);
 		if (allowedtypes.contains(packet.type)) {
 			if (aps.containsKey(packet.origen) || packet.type.equals(Packet.BEACON) || packet.type.equals(Packet.PROBERESP) || packet.type.equals(Packet.ASSOCIATIONRESP) || packet.type.equals(Packet.ACTION) || packet.type.equals(Packet.REASSOCIATIONRESP)) {
 				updateAP(packet);
+				// TODO este if ya no deberia pasar, lo sacamos o lo dejamos?
 				if (clients.containsKey(packet.origen))
 					clients.remove(packet.origen);
 				if (config.sendAP) {
 					// TODO Enviar al servidor
-					setChanged();
-					notifyObservers(toString());
-				}	
+				}
 			}
 			else {
 				updateClient(packet);
 				if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
 					// TODO Enviar al servidor
 				}
-				setChanged();
-				notifyObservers(toString());
 			}
 		}
 	}
@@ -206,14 +205,22 @@ public class Card extends Observable{
 			status = "";
 		else
 			status = status + line + "\n";
-		setChanged();
-		notifyObservers(toString());
 	}
-	
-	public void addObserver(Observer o) {
-		super.addObserver(o);
-		setChanged();
-		notifyObservers(toString());
+
+	public String getServerStatus() {
+		return serverStatus;
+	}
+
+	public void setServerStatus(String serverStatus) {
+		this.serverStatus = serverStatus;
+	}
+
+	public String getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(String lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 
 }

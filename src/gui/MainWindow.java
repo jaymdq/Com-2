@@ -68,8 +68,8 @@ public class MainWindow {
 	private JSpinner idScanner;
 	private JLabel txtServerStatus;
 	private JLabel txtUltimaActualizacion;
-	public static ConsolaObserver consola;
-
+	private Updater updater;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -171,7 +171,6 @@ public class MainWindow {
 		console.setFont(new Font("Monospaced", Font.BOLD, 16));
 		console.setEditable(false);
 		scrollPane.setViewportView(console);
-		consola = new ConsolaObserver(console);
 		
 		// Creo label de tarjeta de red
 		JLabel lblTarjetaDeRed = new JLabel("Tarjeta de red wireless:");
@@ -211,7 +210,6 @@ public class MainWindow {
 				cards.removeAll(available);
 				for (String card : cards){
 					Card tarjeta = new Card(card);
-					tarjeta.addObserver(consola);
 					availableCards.put(card, tarjeta);
 				}
 				tarjetasDisponibles.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
@@ -228,6 +226,7 @@ public class MainWindow {
 						selected.stop();
 					else	
 						selected.start();
+					updater.update();
 					setPlayBtn(selected.isActive());
 				}
 			}
@@ -366,8 +365,15 @@ public class MainWindow {
 					selected.getConfig().idScanner = (int) idScanner.getValue();
 			}
 		});
+		
+		// El actualizador de tarjeta
+		updater = new Updater(console,txtUltimaActualizacion,txtServerStatus);
+		Thread t = new Thread(updater);
+		t.start();
+		
 		// Leo la primera tarjeta de la lista
-		loadCard(tarjetasDisponibles.getSelectedItem().toString());
+		if (tarjetasDisponibles.getSelectedItem() != null)
+			loadCard(tarjetasDisponibles.getSelectedItem().toString());
 
 	}
 
@@ -409,8 +415,6 @@ public class MainWindow {
 	private void loadCard(String newcard) {
 		Card card = availableCards.get(newcard);
 		if (selected == null | selected != card) {
-			if (selected != null)
-				selected.deleteObserver(consola);
 			selected = card;
 			Config config = selected.getConfig();
 			chkBoxAP.setSelected(config.sendAP);
@@ -421,7 +425,7 @@ public class MainWindow {
 			txtServerIP.setValue(config.serverIP);
 			idScanner.setValue(config.idScanner);
 			setPlayBtn(selected.isActive());
-			card.addObserver(consola);
+			updater.setCard(selected);
 		}
 	}
 

@@ -9,7 +9,6 @@ public class Config {
 	public int timeSend;
 	public String serverIP;
 	public int idScanner;
-	public Boolean serverStatus;	
 
 	public Config() {
 		sendAP = false;
@@ -19,6 +18,5 @@ public class Config {
 		timeSend = 0;
 		serverIP = "190.19.175.174";
 		idScanner = 14;
-		serverStatus = null;
 	}
 }
