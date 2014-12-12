@@ -15,7 +15,8 @@ public class Packet {
 	public static final String AUTHENTICATION = "0x0b";
 	public static final String DESAUTHENTICATION = "0x0c";
 	public static final String ACTION = "0x0d";
-	public static final String FLAGSFRAME = "0x24";
+	public static final String DATAFRAME = "0x20";
+	public static final String ENERGYFRAME = "0x24";
 	public static final String BROADCAST = "ff:ff:ff:ff:ff:ff";
 	
 	public String type = "";
@@ -44,7 +45,10 @@ public class Packet {
 			if (parseado.length > 5)
 				essid = parseado[5];
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+			// Si hubo un error ignoro el paquete
+			type = "";
+		}
 	}
 	
 	// String

@@ -3,7 +3,7 @@ package card;
 public class AP extends DispositivoABS {
 	
 	// Statics
-	public static final String TITLE = "BSSID			PWR		BEACONS		ESSID";
+	public static final String TITLE = "BSSID			PWR		Packets		ESSID";
 	public static String[] TYPES = {Packet.BEACON,Packet.ACTION,Packet.ASSOCIATIONRESP,Packet.PROBERESP, Packet.REASSOCIATIONRESP};
 
 	// Variables propias de un AP

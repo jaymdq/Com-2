@@ -7,7 +7,7 @@ public class Client extends DispositivoABS{
 	// Statics
 	public static final String TITLE = "BSSID			STATION			PWR	Packets		Probes";
 	private final String NOASSOCIATED = "(not associated)";
-	public static String[] TYPES = {Packet.PROBEREQ,Packet.ASSOCIATIONREQ,Packet.REASSOCIATIONREQ,Packet.AUTHENTICATION,Packet.DESAUTHENTICATION, Packet.DISOCIATION,Packet.FLAGSFRAME};
+	public static String[] TYPES = {Packet.PROBEREQ,Packet.ASSOCIATIONREQ,Packet.REASSOCIATIONREQ,Packet.AUTHENTICATION,Packet.DESAUTHENTICATION, Packet.DISOCIATION,Packet.DATAFRAME,Packet.ENERGYFRAME};
 
 	// Variables propias de un cliente
 	public String bssid;
@@ -43,7 +43,7 @@ public class Client extends DispositivoABS{
 				bssid = NOASSOCIATED;
 				break;
 			// Si es un paquete de datos seguro se encuentre conectado
-			case (Packet.FLAGSFRAME) :
+			case (Packet.ENERGYFRAME) :
 				bssid = packet.destino;
 				break;
 		}

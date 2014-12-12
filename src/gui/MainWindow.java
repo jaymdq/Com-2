@@ -33,7 +33,6 @@ import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -91,15 +90,7 @@ public class MainWindow {
 
 	// Inicializa la ventana
 	public MainWindow() {
-		String[] command = {"bash","-c","cat ./scripts/allowedtypes.txt"};
-		int idtask = taskManager.start(command, null);
-		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
-		BufferedReader buff = new BufferedReader(inreader);
-		try {
-			String line = null;
-			while ( (line=buff.readLine()) != null)
-				Card.addTypes(line.substring(0,4));
-		} catch (IOException e) {}
+		loadTypes();
 		initialize();
 	}
 
@@ -331,9 +322,9 @@ public class MainWindow {
 		txtServerIP.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				//Acá se le pasa a la clase card la nueva ip
+				//Acï¿½ se le pasa a la clase card la nueva ip
 
-				//Primero se verifica que sea válida
+				//Primero se verifica que sea vï¿½lida
 				String arreglo[] = txtServerIP.getText().split(".");
 				boolean condicion = true;
 				for ( int i = 0; i < arreglo.length ; i++){
@@ -344,12 +335,12 @@ public class MainWindow {
 						condicion = false;
 					}
 					if (num < 0 && num > 255){
-						//Inválido
+						//Invï¿½lido
 						condicion = false;
 					}
 				}
 
-				//Si es válido se envia
+				//Si es vï¿½lido se envia
 				if (condicion){
 					txtServerIP.setForeground( Color.GREEN );
 					if (selected != null)
@@ -497,5 +488,17 @@ public class MainWindow {
 		taskManager.waitfor(idtask);
 	}
 
-
+	private void loadTypes() {
+		String[] command = {"bash","-c","cat ./scripts/allowedtypes.txt"};
+		int idtask = taskManager.start(command, null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = null;
+			while ( (line=buff.readLine()) != null) {
+				if (!line.startsWith("#"))
+					Card.addTypes(line.substring(0,4));
+			}
+		} catch (IOException e) {}
+	}
 }
