@@ -1,6 +1,5 @@
 package card;
 
-import java.util.Date;
 import java.util.Vector;
 
 public class Client {
@@ -11,17 +10,15 @@ public class Client {
 	public String station;
 	public int packets;
 	public Vector<String> probes;
-	public Date last;
 	private final String NOASSOCIATED = "(not associated)";
+	public long last;
 	
 	public Client(Packet packet) {
 		probes = new Vector<String>();
 		station = packet.origen;
 		power = packet.pwr;
 		packets = 1;
-		last = packet.time;
 		bssid = NOASSOCIATED;
-
 		switch (packet.type) {
 			case (Packet.PROBEREQ) :
 				if (!packet.essid.equals(""))
@@ -31,6 +28,7 @@ public class Client {
 				bssid = packet.destino;
 				break;
 		}
+		last = System.currentTimeMillis();
 	}
 
 	// String que iria en la consola
@@ -58,5 +56,4 @@ public class Client {
 				break;
 		}
 	}
-
 }

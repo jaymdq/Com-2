@@ -1,7 +1,5 @@
 package card;
 
-import java.util.Date;
-
 public class AP {
 
 	public static final String TITLE = "BSSID			PWR		BEACONS		ESSID";
@@ -11,7 +9,7 @@ public class AP {
 	public int channel;
 	public String encrypt;
 	public String essid;
-	public Date last;
+	public long last;
 	
 	public AP(Packet packet) {
 		bssid = packet.origen;
@@ -25,9 +23,7 @@ public class AP {
 				essid = "<red oculta>";
 			beacons++;
 		}
-		// TODO channel?
-		// TODO encrypt?
-		last = packet.time;
+		last = System.currentTimeMillis();
 	}
 	
 	// String que iria en la consola
