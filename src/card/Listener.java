@@ -12,9 +12,13 @@ public class Listener implements Runnable {
 	private InputStream input;
 	
 	// Constructor
-	public Listener(InputStream input, Card card) {
-		this.input = input;
+	public Listener(Card card) {
+		this.input = null;
 		this.card = card;
+	}
+	
+	public void setInputStream(InputStream input) {
+		this.input = input;
 	}
 	
 	@Override

@@ -20,6 +20,7 @@ public class Card {
 	private Thread listenerthread;
 	private Thread removerthread;
 	private Remover remover;
+	private Listener listener;
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
@@ -49,6 +50,7 @@ public class Card {
 		aps = new HashMap<String,DispositivoABS>();
 		clients = new HashMap<String,DispositivoABS>();
 		remover = new Remover(aps,clients);
+		listener = new Listener(this);
 	}
 
 	// Start
@@ -116,14 +118,14 @@ public class Card {
 	private void tshark() {
 		if (monitor != null) {
 			String commandtshark[] = {"bash","./scripts/tshark.sh", monitor};
+			String commandchannels[] = {"bash","./scripts/change_channels.sh", monitor};
 			idtshark = taskManager.start(commandtshark,null);
-			Listener listener = new Listener(taskManager.getInputStream(idtshark),this);
+			idchannels = taskManager.start(commandchannels, null);
+			listener.setInputStream(taskManager.getInputStream(idtshark));
 			listenerthread = new Thread(listener);
 			listenerthread.start();
 			removerthread = new Thread(remover);
 			removerthread.start();
-			String commandchannels[] = {"bash","./scripts/change_channels.sh", monitor};
-			idchannels = taskManager.start(commandchannels, null);
 		}
 	}
 	
