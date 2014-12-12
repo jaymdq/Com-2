@@ -3,33 +3,30 @@ package card;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
-
 import taskmanager.taskManager;
 
 public class Card {
 	
 	private String card;
 	private String monitor;
-	private int idchannels;
-	private int idtshark;
+	private int idChannels;
+	private int idTshark;
 	private boolean active;
 	private Config config;
-	private Thread listenerthread;
-	private Thread removerthread;
-	private Remover remover;
-	private Listener listener;
+	private Thread listenerThread;
 	private String status;
-	private HashMap<String, DispositivoABS> aps;
-	private HashMap<String, DispositivoABS> clients;
-	private static Vector<String> allowedtypes = new Vector<String>();;
-	private String serverstatus;
-	private String lastsend;
+	private HashMap<String, AP> aps;
+	private HashMap<String, Client> clients;
+	private static Vector<String> allowedtypes;
+	private String serverStatus;
+	private String lastUpdate;
 	
 	// Agreaga un tipo aceptado por el programa
 	public static void addTypes(String type) {
+		if (allowedtypes == null)
+			allowedtypes = new Vector<String>();
 		if (!allowedtypes.contains(type))
 			allowedtypes.add(type);
 	}
@@ -37,29 +34,24 @@ public class Card {
 	// Create a new card
 	public Card(String card) {
 		this.card = card;
-		idchannels = 0;
-		idtshark = 0;
-		setStatus("");
-		config = new Config();
-		monitor = null;
-		listenerthread = null;
-		removerthread = null;
-		lastsend = null;
-		serverstatus = null;
+		this.monitor = null;
+		idChannels = 0;
+		idTshark = 0;
 		active = false;
-		aps = new HashMap<String,DispositivoABS>();
-		clients = new HashMap<String,DispositivoABS>();
-		remover = new Remover(aps,clients);
-		listener = new Listener(this);
+		setStatus("");
+		setConfig(new Config());
 	}
 
 	// Start
 	public synchronized void start() {
 		if (!active) {
 			setStatus("");
-			if (initCard()) {
-				activateMonitor();
-				tshark();
+			initCard();
+			activateMonitor();
+			tshark();
+			if (listenerThread != null) {
+				aps = new HashMap<String,AP>();
+				clients = new HashMap<String,Client>();
 				active = true;
 			}
 		}
@@ -70,29 +62,29 @@ public class Card {
 		if (active) {
 			active = false;
 			setStatus("");
+			if (listenerThread != null) {
+				listenerThread.interrupt();
+				listenerThread = null;
+			}
 			desactivateMonitor();
-			aps.clear();
-			clients.clear();
 		}
 	}
 	
 	// Inicia la tarjeta
-	private boolean initCard() {
+	private void initCard() {
 		String command[] = {"bash","./scripts/init_card.sh",card};
 		int idtask = taskManager.start(command,null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
 		BufferedReader buff = new BufferedReader(inreader);
-		boolean toreturn = true;
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null){
 				setStatus(line);
-				toreturn = false;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return toreturn;
+		taskManager.waitfor(idtask);
 	}
 
 	// Activa el modo monitor
@@ -104,8 +96,10 @@ public class Card {
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null){
-				if (line.contains("mon"))
+				if (line.contains("mon")) {
+					setStatus("Monitor activado: " + line);
 					monitor = line;
+				}
 				else 
 					setStatus(line);
 			}
@@ -118,29 +112,19 @@ public class Card {
 	private void tshark() {
 		if (monitor != null) {
 			String commandtshark[] = {"bash","./scripts/tshark.sh", monitor};
+			idTshark = taskManager.start(commandtshark,null);
+			Listener listener = new Listener(taskManager.getInputStream(idTshark),this);
+			listenerThread = new Thread(listener);
+			listenerThread.start();
 			String commandchannels[] = {"bash","./scripts/change_channels.sh", monitor};
-			idtshark = taskManager.start(commandtshark,null);
-			idchannels = taskManager.start(commandchannels, null);
-			listener.setInputStream(taskManager.getInputStream(idtshark));
-			listenerthread = new Thread(listener);
-			listenerthread.start();
-			removerthread = new Thread(remover);
-			removerthread.start();
+			idChannels = taskManager.start(commandchannels, null);
 		}
 	}
 	
 	// Desactiva el modo monitor
 	private void desactivateMonitor() {
-		taskManager.stop(idchannels);
-		taskManager.stop(idtshark);
-		if (listenerthread != null) {
-			listenerthread.interrupt();
-			listenerthread = null;
-		}
-		if (removerthread != null) {
-			removerthread.interrupt();
-			removerthread = null;
-		}
+		taskManager.stop(idChannels);
+		taskManager.stop(idTshark);
 		String command[] = {"bash","./scripts/desactivate_monitor.sh",monitor};
 		int idtask = taskManager.start(command, null);
 		taskManager.waitfor(idtask);
@@ -157,92 +141,85 @@ public class Card {
 		return config;
 	}
 
+	// Setea una nueva configuracion
+	public void setConfig(Config config) {
+		this.config = config;
+	}
+
 	// String que iria a la consola
 	public synchronized String toString() {
-		// String a retornar
 		String toreturn = new String();
-		// Si la tarjeta esta inactiva se devuelve el mensaje de status
 		if (!active)
 			toreturn = status;
-		// Si la tarjeta esta activa se devuelven los dispositivos
 		else {
 			toreturn = toreturn + AP.TITLE + "\n";
-			for (DispositivoABS ap : aps.values())
+			for (AP ap : aps.values())
 				toreturn = toreturn + ap.toString() + "\n";
 			toreturn= toreturn + "\n";
 			toreturn = toreturn + Client.TITLE + "\n";
-			for (DispositivoABS client : clients.values())
+			for (Client client : clients.values())
 				toreturn = toreturn + client.toString() + "\n";
 		}
-		// Retorno el string
 		return toreturn;
 	}
 	
-	// Procesado de packet
-	public synchronized void listen(String line) {
-		// Parseo el string
+	public synchronized void listen(String line) {		
 		String[] parseado = line.split("	");
-		// Creo el packet a partir del string
 		Packet packet = new Packet(parseado);
-		// Si es un packet permitido
 		if (allowedtypes.contains(packet.type)) {
-			// Si corresponde a un AP
-			if (isAP(packet))
-				processAP(packet);
-			// Si corresopnde a un client
-			else if (isClient(packet))
-				processClient(packet);
+			if (aps.containsKey(packet.origen) || packet.type.equals(Packet.BEACON) || packet.type.equals(Packet.PROBERESP) || packet.type.equals(Packet.ASSOCIATIONRESP) || packet.type.equals(Packet.ACTION) || packet.type.equals(Packet.REASSOCIATIONRESP)) {
+				updateAP(packet);
+				// TODO este if ya no deberia pasar, lo sacamos o lo dejamos?
+				if (clients.containsKey(packet.origen))
+					clients.remove(packet.origen);
+			}
+			else {
+				updateClient(packet);
+			}
 		}
 	}
 	
-	// Verifica si el packet corresponde a un AP
-	private boolean isAP(Packet packet) {
-		return (aps.containsKey(packet.origen) || Arrays.asList(AP.TYPES).contains(packet.type));
-	}
-	
-	// Verifica si el packet corresponde a un Cliente
-	private boolean isClient(Packet packet) {
-		return (clients.containsKey(packet.origen) || Arrays.asList(Client.TYPES).contains(packet.type));
-	}
-	
-	// Si corresponde, envia el packet al servidor
-	private void sendPacket(Packet packet) {
-		// TODO enviar packet
-	}
-	
-	// Procesa el packet en caso de que sea de un AP
-	private void processAP(Packet packet) {
-		DispositivoABS ap = aps.get(packet.origen);
-		// Si ya estaba registrado actualizo
-		if (ap != null) 
+	private void updateAP(Packet packet) {
+		AP ap = aps.get(packet.origen);
+		if (ap != null) {
 			ap.update(packet);
-		// Sino, lo agrego
-		else {
-			ap = new AP(packet,config.timePaq);
-			aps.put(packet.origen, ap);
+			if (config.sendAP) {
+				long now = System.currentTimeMillis();
+				if (now - ap.last > config.timePaq) {
+					ap.last = now;
+					// TODO enviar
+				}		
+			}
 		}
-		// Si se cumplen las condiciones, enviar
-		if (ap.needUpdate() && config.sendAP)
-			sendPacket(packet);
+		else {
+			aps.put(packet.origen, new AP(packet));
+			if (config.sendAP) {
+				// TODO enviar
+			}
+		}
+
 	}
 	
-	// Procesa el packet en caso de que sea de un Cliente
-	private void processClient(Packet packet) {
-		DispositivoABS client = clients.get(packet.origen);
-		// Si ya estaba registrado actualizo
-		if (client != null) 
+	private void updateClient(Packet packet) {
+		Client client = clients.get(packet.origen);
+		if (client != null) {
 			client.update(packet);
-		// Sino, lo agrego
-		else {
-			client = new Client(packet,config.timePaq);
-			clients.put(packet.origen, client);
+			if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
+				long now = System.currentTimeMillis();
+				if (now - client.last > config.timePaq) {
+					client.last = now;
+					// TODO enviar
+				}	
+			}
 		}
-		// Si se cumplen las condiciones, enviar
-		if ( client.needUpdate() && (packet.type.equals(Packet.PROBEREQ) || config.sendAll))
-			sendPacket(packet);
+		else {
+			clients.put(packet.origen, new Client(packet));
+			if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
+				// TODO enviar
+			}
+		}
 	}
 	
-	// Setea el estado de la tarjeta
 	public void setStatus(String line) {
 		if (line.equals(""))
 			status = "";
@@ -250,24 +227,20 @@ public class Card {
 			status = status + line + "\n";
 	}
 
-	// Devuelve el estado de la tarjeta
 	public String getServerStatus() {
-		return serverstatus;
+		return serverStatus;
 	}
 
-	// Setea el estado del servidor
-	public void setServerStatus(String serverstatus) {
-		this.serverstatus = serverstatus;
+	public void setServerStatus(String serverStatus) {
+		this.serverStatus = serverStatus;
 	}
 
-	// Devuelve el tiempo del ultimo intento de envio al servidor
-	public String getLastSend() {
-		return lastsend;
+	public String getLastUpdate() {
+		return lastUpdate;
 	}
 
-	// Setea el tiempo del ultimo intento de envio al servidor
-	public void setLastSend(String lastsend) {
-		this.lastsend = lastsend;
+	public void setLastUpdate(String lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 
 }

@@ -1,47 +1,48 @@
 package card;
 
-public class AP extends DispositivoABS {
-	
-	// Statics
-	public static final String TITLE = "BSSID			PWR		Packets		ESSID";
-	public static String[] TYPES = {Packet.BEACON,Packet.ACTION,Packet.ASSOCIATIONRESP,Packet.PROBERESP, Packet.REASSOCIATIONRESP};
+public class AP {
 
-	// Variables propias de un AP
+	public static final String TITLE = "BSSID			PWR		BEACONS		ESSID";
+	public String bssid;
+	public int pwr;
+	public int beacons;
+	public int channel;
+	public String encrypt;
 	public String essid;
+	public long last;
 	
-	public AP(Packet packet, long delta) {
-		super(packet,delta);
-	}
-	
-	// String
-	public String toString() {
-		return mac + "	" + power + "		" + packets + "		" + essid;
-	}
-
-	@Override
-	protected void initialize(Packet packet) {
-		// Inicio variables propias de un AP
+	public AP(Packet packet) {
+		bssid = packet.origen;
+		pwr = packet.pwr;
+		beacons = 0;
 		essid = "";
+		if (packet.type.equals(Packet.BEACON)) {
+			if (!packet.essid.equals(""))
+				essid = packet.essid;
+			else
+				essid = "<red oculta>";
+			beacons++;
+		}
+		last = System.currentTimeMillis();
 	}
-
-	@Override
-	protected void analyzePacket(Packet packet) {
-		// Intento obtener datos a partir del paquete
-		switch (packet.type) {
-			// Si es un beacon intento obtener el essid
-			case (Packet.BEACON) :
+	
+	// String que iria en la consola
+	public String toString() {
+		// TODO Aca deberia imprimri los datos del AP de forma tabulada 
+		return bssid + "	" + pwr + "		" + beacons + "		" + essid;
+	}
+	
+	public void update(Packet packet) {
+		// TODO Deberia verificar las diferencias de tiempo y actualizar el tiempo
+		pwr = packet.pwr;
+		if (packet.type.equals(Packet.BEACON)) {
+			if (essid.equals("")) {
 				if (!packet.essid.equals(""))
 					essid = packet.essid;
 				else
 					essid = "<red oculta>";
-			break;
-			// Si es un beacon intento obtener el essid
-			case (Packet.PROBERESP) :
-				if (!packet.essid.equals(""))
-					essid = packet.essid;
-				else
-					essid = "<red oculta>";
-			break;
-		}		
+			}
+			beacons++;
+		}
 	}
 }

@@ -19,5 +19,4 @@ public class Config {
 		serverIP = "190.19.175.174";
 		idScanner = 14;
 	}
-
 }
