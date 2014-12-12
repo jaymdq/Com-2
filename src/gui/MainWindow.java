@@ -422,7 +422,7 @@ public class MainWindow {
 			chkBoxFakeAP.setSelected(config.fakeAp);
 			tiempoEntrePaquetes.setValue(config.timePaq);
 			tiempoEntreEnvios.setValue(config.timeSend);
-			txtServerIP.setValue(config.serverIP);
+			txtServerIP.setText(config.serverIP);
 			idScanner.setValue(config.idScanner);
 			setPlayBtn(selected.isActive());
 			updater.setCard(selected);
