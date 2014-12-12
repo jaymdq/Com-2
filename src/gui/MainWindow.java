@@ -496,7 +496,9 @@ public class MainWindow {
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null) {
-				if (!line.startsWith("#"))
+				// Si no es una linea en blanco (mas de 3 caracteres) y no empieza con #
+				// TODO ver si se puede hacer el line.separator en lugar de mas de 3 caracteres
+				if (!line.startsWith("#") && line.length()> 3)
 					Card.addTypes(line.substring(0,4));
 			}
 		} catch (IOException e) {}
