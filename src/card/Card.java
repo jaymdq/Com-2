@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Vector;
-
 import taskmanager.taskManager;
 
 public class Card {
@@ -173,31 +172,52 @@ public class Card {
 				// TODO este if ya no deberia pasar, lo sacamos o lo dejamos?
 				if (clients.containsKey(packet.origen))
 					clients.remove(packet.origen);
-				if (config.sendAP) {
-					// TODO Enviar al servidor
-				}
 			}
 			else {
 				updateClient(packet);
-				if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
-					// TODO Enviar al servidor
-				}
 			}
 		}
 	}
 	
 	private void updateAP(Packet packet) {
-		if (aps.containsKey(packet.origen))
-			aps.get(packet.origen).update(packet);
-		else
+		AP ap = aps.get(packet.origen);
+		if (ap != null) {
+			ap.update(packet);
+			if (config.sendAP) {
+				long now = System.currentTimeMillis();
+				if (now - ap.last > config.timePaq) {
+					ap.last = now;
+					// TODO enviar
+				}		
+			}
+		}
+		else {
 			aps.put(packet.origen, new AP(packet));
+			if (config.sendAP) {
+				// TODO enviar
+			}
+		}
+
 	}
 	
 	private void updateClient(Packet packet) {
-		if (clients.containsKey(packet.origen))
-			clients.get(packet.origen).update(packet);
-		else
+		Client client = clients.get(packet.origen);
+		if (client != null) {
+			client.update(packet);
+			if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
+				long now = System.currentTimeMillis();
+				if (now - client.last > config.timePaq) {
+					client.last = now;
+					// TODO enviar
+				}	
+			}
+		}
+		else {
 			clients.put(packet.origen, new Client(packet));
+			if (packet.type.equals(Packet.PROBEREQ) || config.sendAll) {
+				// TODO enviar
+			}
+		}
 	}
 	
 	public void setStatus(String line) {

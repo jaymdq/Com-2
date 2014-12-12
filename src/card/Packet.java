@@ -37,16 +37,6 @@ public class Packet {
 		}
 		catch (Exception e) {
 		}
-		/*if (parseado.length > 3 && parseado[2].length() == 17 && parseado[3].length() == 17) {
-			// TODO obtener time del parseando [0]		
-			type = parseado[1];
-			origen = parseado[2];
-			destino = parseado[3];
-			if (parseado.length > 4)
-				pwr = Math.abs(Integer.parseInt(parseado[4]));
-			if (parseado.length > 5)
-				essid = parseado[5];
-		}*/
 	}
 	
 	public String toString() {
