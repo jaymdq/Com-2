@@ -18,6 +18,8 @@ public class Card {
 	private boolean active;
 	private Config config;
 	private Thread listenerthread;
+	private Thread removerthread;
+	private Remover remover;
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
@@ -40,9 +42,13 @@ public class Card {
 		config = new Config();
 		monitor = null;
 		listenerthread = null;
+		removerthread = null;
 		lastsend = null;
 		serverstatus = null;
 		active = false;
+		aps = new HashMap<String,DispositivoABS>();
+		clients = new HashMap<String,DispositivoABS>();
+		remover = new Remover(aps,clients);
 	}
 
 	// Start
@@ -52,8 +58,6 @@ public class Card {
 			if (initCard()) {
 				activateMonitor();
 				tshark();
-				aps = new HashMap<String,DispositivoABS>();
-				clients = new HashMap<String,DispositivoABS>();
 				active = true;
 			}
 		}
@@ -65,6 +69,8 @@ public class Card {
 			active = false;
 			setStatus("");
 			desactivateMonitor();
+			aps.clear();
+			clients.clear();
 		}
 	}
 	
@@ -114,6 +120,8 @@ public class Card {
 			Listener listener = new Listener(taskManager.getInputStream(idtshark),this);
 			listenerthread = new Thread(listener);
 			listenerthread.start();
+			removerthread = new Thread(remover);
+			removerthread.start();
 			String commandchannels[] = {"bash","./scripts/change_channels.sh", monitor};
 			idchannels = taskManager.start(commandchannels, null);
 		}
@@ -126,6 +134,10 @@ public class Card {
 		if (listenerthread != null) {
 			listenerthread.interrupt();
 			listenerthread = null;
+		}
+		if (removerthread != null) {
+			removerthread.interrupt();
+			removerthread = null;
 		}
 		String command[] = {"bash","./scripts/desactivate_monitor.sh",monitor};
 		int idtask = taskManager.start(command, null);
@@ -192,10 +204,8 @@ public class Card {
 	}
 	
 	// Si corresponde, envia el packet al servidor
-	private void sendPacket(DispositivoABS dispositivo, Packet packet) {
-		if (dispositivo.needUpdate()) {
-			// TODO enviar packet
-		}
+	private void sendPacket(Packet packet) {
+		// TODO enviar packet
 	}
 	
 	// Procesa el packet en caso de que sea de un AP
@@ -210,8 +220,8 @@ public class Card {
 			aps.put(packet.origen, ap);
 		}
 		// Si se cumplen las condiciones, enviar
-		if (config.sendAP)
-			sendPacket(ap,packet);
+		if (ap.needUpdate() && config.sendAP)
+			sendPacket(packet);
 	}
 	
 	// Procesa el packet en caso de que sea de un Cliente
@@ -226,8 +236,8 @@ public class Card {
 			clients.put(packet.origen, client);
 		}
 		// Si se cumplen las condiciones, enviar
-		if (packet.type.equals(Packet.PROBEREQ) || config.sendAll)
-			sendPacket(client,packet);
+		if ( client.needUpdate() && (packet.type.equals(Packet.PROBEREQ) || config.sendAll))
+			sendPacket(packet);
 	}
 	
 	// Setea el estado de la tarjeta
