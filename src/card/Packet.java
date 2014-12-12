@@ -22,23 +22,32 @@ public class Packet {
 	public String origen = "";
 	public String destino = "";
 	public Date time;
-	public int pwr = 0;
+	public int power = 0;
 	public String essid = "";
 	
+	// Constructor
 	public Packet(String[] parseado) {
+		// Inicializo las variables
+		type = "";
+		origen = "";
+		destino = "";
+		time = null;
+		power = 0;
+		essid = "";
+		// Intento obtener los datos del paquete
 		try {
 			type = parseado[1];
 			origen = parseado[2];
 			destino = parseado[3];
 			if (parseado.length > 4)
-				pwr = Math.abs(Integer.parseInt(parseado[4]));
+				power = Math.abs(Integer.parseInt(parseado[4]));
 			if (parseado.length > 5)
 				essid = parseado[5];
 		}
-		catch (Exception e) {
-		}
+		catch (Exception e) {}
 	}
 	
+	// String
 	public String toString() {
 		String s = "Type: " + type + "\n";
 		s = s+ "Origen: " + origen + "\n";

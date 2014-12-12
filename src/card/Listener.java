@@ -8,9 +8,11 @@ import java.util.Observable;
 
 public class Listener extends Observable implements Runnable {
 
+	// Variables propias del listener
 	private Card card;
 	private InputStream input;
 	
+	// Constructor
 	public Listener(InputStream input, Card card) {
 		this.input = input;
 		this.card = card;
@@ -18,15 +20,14 @@ public class Listener extends Observable implements Runnable {
 	
 	@Override
 	public void run() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {	}
-
+		// Obtengo el input de datos
 		InputStreamReader inreader = new InputStreamReader(input);
 		BufferedReader buff = new BufferedReader(inreader);
+		// Mientras no se cierre el input o me interrumpan
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null && ! Thread.interrupted() ){
+				// Envio los datos a la tarjeta
 				card.listen(line);
 			}
 		} catch (IOException e) {}

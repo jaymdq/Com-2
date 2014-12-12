@@ -2,55 +2,47 @@ package card;
 
 import java.util.Vector;
 
-public class Client {
+public class Client extends DispositivoABS{
 
+	// Statics
 	public static final String TITLE = "BSSID			STATION			PWR	Packets		Probes";
-	public String bssid;
-	public int power;
-	public String station;
-	public int packets;
-	public Vector<String> probes;
 	private final String NOASSOCIATED = "(not associated)";
-	public long last;
+	public static String[] TYPES = {Packet.PROBEREQ,Packet.ASSOCIATIONREQ,Packet.REASSOCIATIONREQ,Packet.AUTHENTICATION,Packet.DESAUTHENTICATION, Packet.DISOCIATION,Packet.FLAGSFRAME};
+
+	// Variables propias de un cliente
+	public String bssid;
+	public Vector<String> probes;
 	
-	public Client(Packet packet) {
-		probes = new Vector<String>();
-		station = packet.origen;
-		power = packet.pwr;
-		packets = 1;
-		bssid = NOASSOCIATED;
-		switch (packet.type) {
-			case (Packet.PROBEREQ) :
-				if (!packet.essid.equals(""))
-					probes.add(packet.essid);
-				break;
-			case (Packet.FLAGSFRAME) :
-				bssid = packet.destino;
-				break;
-		}
-		last = System.currentTimeMillis();
+	public Client(Packet packet, long delta) {
+		super(packet, delta);
 	}
 
-	// String que iria en la consola
+	// String
 	public String toString() {
-		// TODO Aca deberia detectar si esta o no asociado a una red..
-		return bssid + "	" + station + "	" +  power + "	" +  packets + "		" +  probes.toString();
+		return bssid + "	" + mac + "	" +  power + "	" +  packets + "		" +  probes.toString();
 	}
-	
-	// Nuevo paquete que llega
-	public void update(Packet packet) {
-		// TODO Deberia verificar las diferencias de tiempo y actualizar el tiempo
-		power = packet.pwr;
-		packets++;
-		
+
+	@Override
+	protected void initialize(Packet packet) {
+		// Inicio variables propias de un cliente
+		probes = new Vector<String>();
+		bssid = NOASSOCIATED;		
+	}
+
+	@Override
+	protected void analyzePacket(Packet packet) {
+		// Intento obtener datos a partir del paquete
 		switch (packet.type) {
+			// Si es un probe request obtengo el essid por el cual preguntó
 			case (Packet.PROBEREQ) :
 				if (!packet.essid.equals("") && !probes.contains(packet.essid))
 					probes.add(packet.essid);
 				break;
+			// Si es un paquete de disociación seguro ahroa se encuentra descoenctado
 			case (Packet.DISOCIATION) :
 				bssid = NOASSOCIATED;
 				break;
+			// Si es un paquete de datos seguro se encuentre conectado
 			case (Packet.FLAGSFRAME) :
 				bssid = packet.destino;
 				break;
