@@ -1,5 +1,7 @@
 package card;
 
+import java.util.Date;
+
 public abstract class DispositivoABS {
 	
 	// Statics
@@ -9,13 +11,13 @@ public abstract class DispositivoABS {
 	// Variables propias de un dispositivo
 	protected int power;
 	protected int packets;
-	protected long last;
+	protected Date last;
 	protected String mac;
 	protected long delta;
 	
 	// Constructor
 	public DispositivoABS(Packet packet, long delta) {
-		last = System.currentTimeMillis();
+		last = packet.time;
 		mac = packet.origen;
 		packets = 1;
 		power = packet.power;
@@ -27,8 +29,8 @@ public abstract class DispositivoABS {
 	// Verificador de tiempo cumplido
 	public boolean needUpdate() {
 		long now = System.currentTimeMillis();
-		if (now - last > delta) {
-			last = now;
+		if (now - last.getTime() > delta) {
+			last = new Date(now);
 			return true;
 		}
 		return false;

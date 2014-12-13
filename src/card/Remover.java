@@ -18,7 +18,7 @@ public class Remover implements Runnable {
 		synchronized(mapa) {
 			long now = System.currentTimeMillis();
 			for (String key : mapa.keySet()) {
-				if ( now - mapa.get(key).last > 60000 )
+				if ( now - mapa.get(key).last.getTime() > 60000 )
 					todelete.add(key);				
 			}
 			for (String key : todelete)
