@@ -1,9 +1,13 @@
 package parser;
 
+import java.text.SimpleDateFormat;
 import java.util.Vector;
+
 import card.Packet;
 
 public class Parser implements Runnable{
+
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	private Vector<Packet> tosend;
 	private String idscanner;
@@ -26,7 +30,7 @@ public class Parser implements Runnable{
 	private String toLine(Packet paquete){
 		String salida = "";
 		salida += idscanner + "|" ;
-		salida += paquete.parsearFecha() + "|" ;
+		salida += sdf.format(paquete.time) + "|" ;
 		salida += paquete.origen + "|" ;
 		salida += paquete.destino + "|" ;
 		salida += paquete.power + "|";
