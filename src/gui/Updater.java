@@ -27,8 +27,8 @@ public class Updater implements Runnable {
 	public synchronized void update() {
 		if (card != null) {
 			consola.setText(card.toString());
-			//TODO lastupdate.setText(card.getLastUpdate()); poner el date en card
-			serverstatus.setText(card.getServerStatus());
+			serverstatus.setText(card.getConfig().serverstatus);
+			lastupdate.setText(card.getConfig().lastsend);
 		}
 	}
 	

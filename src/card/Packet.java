@@ -23,7 +23,6 @@ public class Packet {
 	public static final String BROADCAST = "ff:ff:ff:ff:ff:ff";
 
 	//Mecanismo para parsear fechas
-	//private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss.SSS",new Locale("en_US"));
 
 	public String type = "";
@@ -44,10 +43,10 @@ public class Packet {
 		essid = "";
 		// Intento obtener los datos del paquete
 		try {
-			time = getDate(parseado[0]);
+			setDate(parseado[0]);
 			type = parseado[1];
-			origen = parseado[2].replaceAll(":", "").toUpperCase();
-			destino = parseado[3].replaceAll(":", "").toUpperCase();
+			origen = parseado[2];
+			destino = parseado[3];
 			if (parseado.length > 4)
 				power = Math.abs(Integer.parseInt(parseado[4]));
 			if (parseado.length > 5)
@@ -112,21 +111,13 @@ public class Packet {
 		return "UNKNOWNTYPE";
 	}
 
-	/*public String parsearFecha(){
-		return sdf.format(time);
-	}*/
-
-	private Date getDate(String fecha){
-		Date salida = null;
-
-		fecha = fecha.substring(0, fecha.length() - 6);
+	private void setDate(String fecha){
+		time = null;
+		fecha = fecha.substring(fecha.length()-31, fecha.length() - 6);
 		try {
-			salida = sdf.parse(fecha);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+			time = sdf.parse(fecha);
+		} catch (ParseException e) {}
 
-		return salida;
 	}
 
 

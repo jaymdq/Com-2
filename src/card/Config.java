@@ -2,22 +2,26 @@ package card;
 
 public class Config {
 
-	public boolean sendAP;
-	public boolean sendAll;
-	public boolean fakeAp;
-	public int timePaq;
-	public int timeSend;
-	public String serverIP;
-	public int idScanner;
-
+	public boolean sendap;
+	public boolean sendall;
+	public boolean fakeap;
+	public int delaymac;
+	public int delaysend;
+	public String serverip;
+	public int idscanner;
+	public String serverstatus;
+	public String lastsend;
+	
 	public Config() {
-		sendAP = false;
-		sendAll = false;
-		fakeAp = false;
-		timePaq = 0;
-		timeSend = 0;
-		serverIP = "190.19.175.174";
-		idScanner = 14;
+		sendap = false;
+		sendall = false;
+		fakeap = false;
+		delaymac = 0;
+		delaysend = 0;
+		serverip = "190.19.175.174";
+		idscanner = 14;
+		lastsend = "-";
+		serverstatus = "N/C";
 	}
 
 }

@@ -27,8 +27,6 @@ public class Card {
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
 	private static Vector<String> allowedtypes = new Vector<String>();;
-	private String serverstatus;
-	private String lastsend;
 	
 	// Agreaga un tipo aceptado por el programa
 	public static void addTypes(String type) {
@@ -45,8 +43,6 @@ public class Card {
 		config = new Config();
 		listenerthread = null;
 		removerthread = null;
-		lastsend = null;
-		serverstatus = null;
 		active = false;
 		aps = new HashMap<String,DispositivoABS>();
 		clients = new HashMap<String,DispositivoABS>();
@@ -107,7 +103,7 @@ public class Card {
 		listenerthread.start();
 		removerthread = new Thread(remover);
 		removerthread.start();
-		parser = new Parser(String.valueOf(config.idScanner),config.timeSend);
+		parser = new Parser(config);
 		parserthread = new Thread(parser);
 		parserthread.start();
 	}
@@ -197,7 +193,7 @@ public class Card {
 	
 	// Si corresponde, envia el packet al servidor
 	private void sendPacket(Packet packet) {
-		// TODO enviar packet
+		parser.addPacket(packet);
 	}
 	
 	// Procesa el packet en caso de que sea de un AP
@@ -208,11 +204,11 @@ public class Card {
 			ap.update(packet);
 		// Sino, lo agrego
 		else {
-			ap = new AP(packet,config.timePaq);
+			ap = new AP(packet,config.delaymac);
 			aps.put(packet.origen, ap);
 		}
 		// Si se cumplen las condiciones, enviar
-		if (ap.needUpdate() && config.sendAP)
+		if (ap.needUpdate() && config.sendap)
 			sendPacket(packet);
 	}
 	
@@ -224,11 +220,11 @@ public class Card {
 			client.update(packet);
 		// Sino, lo agrego
 		else {
-			client = new Client(packet,config.timePaq);
+			client = new Client(packet,config.delaymac);
 			clients.put(packet.origen, client);
 		}
 		// Si se cumplen las condiciones, enviar
-		if ( client.needUpdate() && (packet.type.equals(Packet.PROBEREQ) || config.sendAll))
+		if ( client.needUpdate() && (packet.type.equals(Packet.PROBEREQ) || config.sendall))
 			sendPacket(packet);
 	}
 	
@@ -240,26 +236,6 @@ public class Card {
 			status = status + line + "\n";
 	}
 
-	// Devuelve el estado de la tarjeta
-	public String getServerStatus() {
-		return serverstatus;
-	}
-
-	// Setea el estado del servidor
-	public void setServerStatus(String serverstatus) {
-		this.serverstatus = serverstatus;
-	}
-
-	// Devuelve el tiempo del ultimo intento de envio al servidor
-	public String getLastSend() {
-		return lastsend;
-	}
-
-	// Setea el tiempo del ultimo intento de envio al servidor
-	public void setLastSend(String lastsend) {
-		this.lastsend = lastsend;
-	}
-	
 	private int getChannel() {			
 		String command[] = {"bash","./scripts/get_channel.sh",card};
 		int idtask = taskManager.start(command, null);

@@ -257,7 +257,7 @@ public class MainWindow {
 		chkBoxAP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().sendAP = chkBoxAP.isSelected();
+					selected.getConfig().sendap = chkBoxAP.isSelected();
 			}
 		});
 		// Checkbox de enviar todo
@@ -267,7 +267,7 @@ public class MainWindow {
 		chkBoxAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().sendAll = chkBoxAll.isSelected();
+					selected.getConfig().sendall = chkBoxAll.isSelected();
 			}
 		});
 
@@ -278,7 +278,7 @@ public class MainWindow {
 		chkBoxFakeAP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().fakeAp = chkBoxFakeAP.isSelected();
+					selected.getConfig().fakeap = chkBoxFakeAP.isSelected();
 			}
 		});
 
@@ -295,7 +295,7 @@ public class MainWindow {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().timePaq = (int) tiempoEntrePaquetes.getValue();
+					selected.getConfig().delaymac = (int) tiempoEntrePaquetes.getValue();
 			}
 		});
 
@@ -312,7 +312,7 @@ public class MainWindow {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().timeSend = (int) tiempoEntreEnvios.getValue();
+					selected.getConfig().delaysend = (int) tiempoEntreEnvios.getValue();
 			}
 		});
 
@@ -334,7 +334,7 @@ public class MainWindow {
 				if (condicion){
 					txtServerIP.setForeground( Color.GREEN );
 					if (selected != null)
-						selected.getConfig().serverIP = txtServerIP.getText();
+						selected.getConfig().serverip = txtServerIP.getText();
 				}else{
 					txtServerIP.setForeground( Color.RED );
 				}
@@ -381,7 +381,7 @@ public class MainWindow {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().idScanner = (int) idScanner.getValue();
+					selected.getConfig().idscanner = (int) idScanner.getValue();
 			}
 		});
 
@@ -436,13 +436,13 @@ public class MainWindow {
 		if (selected == null | selected != card) {
 			selected = card;
 			Config config = selected.getConfig();
-			chkBoxAP.setSelected(config.sendAP);
-			chkBoxAll.setSelected(config.sendAll);
-			chkBoxFakeAP.setSelected(config.fakeAp);
-			tiempoEntrePaquetes.setValue(config.timePaq);
-			tiempoEntreEnvios.setValue(config.timeSend);
-			txtServerIP.setText(config.serverIP);
-			idScanner.setValue(config.idScanner);
+			chkBoxAP.setSelected(config.sendap);
+			chkBoxAll.setSelected(config.sendall);
+			chkBoxFakeAP.setSelected(config.fakeap);
+			tiempoEntrePaquetes.setValue(config.delaymac);
+			tiempoEntreEnvios.setValue(config.delaysend);
+			txtServerIP.setText(config.serverip);
+			idScanner.setValue(config.idscanner);
 			setPlayBtn(selected.isActive());
 			updater.setCard(selected);
 		}
