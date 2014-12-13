@@ -37,6 +37,7 @@ import javax.swing.JEditorPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import parser.Parser;
 import taskmanager.taskManager;
 
 import java.awt.event.ActionListener;
@@ -68,8 +69,8 @@ public class MainWindow {
 	private JSpinner tiempoEntreEnvios;
 	private JTextField txtServerIP;
 	private JSpinner idScanner;
-	private JLabel txtServerStatus;
-	private JLabel txtUltimaActualizacion;
+	private static JLabel txtServerStatus;
+	private static JLabel txtUltimaActualizacion;
 	private Updater updater;
 	private JLabel lblTiempoEntre;
 	private JLabel lblServerIp;
@@ -531,5 +532,17 @@ public class MainWindow {
 		lblServerIp.setEnabled(valor);
 		lblTiempoEntre_1.setEnabled(valor);
 		lblIdscanner.setEnabled(valor);
+	}
+	
+	public static void actulizarEstadoIP(boolean valor){
+		if (valor){
+			txtServerStatus.setText("Buena");
+			txtServerStatus.setForeground( Color.GREEN );
+			txtUltimaActualizacion.setText( new SimpleDateFormat("dd-mm-yyyy HH:mm:ss").format(new Date()) );
+		}else{
+			txtServerStatus.setText("Mala");
+			txtServerStatus.setForeground( Color.RED );
+		}
+			
 	}
 }

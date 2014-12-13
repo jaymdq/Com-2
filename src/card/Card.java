@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
+import parser.Parser;
 import taskmanager.taskManager;
 
 public class Card {
@@ -27,6 +28,7 @@ public class Card {
 	private static Vector<String> allowedtypes = new Vector<String>();;
 	private String serverstatus;
 	private String lastsend;
+	private Parser parser;
 	
 	// Agreaga un tipo aceptado por el programa
 	public static void addTypes(String type) {
@@ -58,6 +60,15 @@ public class Card {
 		if (!active) {
 			setStatus("");
 			if (initCard()) {
+				
+				//Se crea el parser y se lo manda a correr
+				
+				String idScanner = "" + config.idScanner;
+				parser = new Parser(idScanner,config.timeSend);
+				Thread t_parser = new Thread(parser);
+				t_parser.start();
+				parser.activar();
+				
 				activateMonitor();
 				tshark();
 				active = true;
@@ -71,8 +82,16 @@ public class Card {
 			active = false;
 			setStatus("");
 			desactivateMonitor();
+			parser.terminar();			
 			aps.clear();
 			clients.clear();
+			
+			while (parser.estaActivo()){
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {}
+			}
+			parser = null;
 		}
 	}
 	
