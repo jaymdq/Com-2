@@ -71,7 +71,10 @@ public class MainWindow {
 	private JLabel txtServerStatus;
 	private JLabel txtUltimaActualizacion;
 	private Updater updater;
-
+	private JLabel lblTiempoEntre;
+	private JLabel lblServerIp;
+	private JLabel lblTiempoEntre_1;
+	private JLabel lblIdscanner;
 	/**
 	 * Launch the application.
 	 */
@@ -280,7 +283,7 @@ public class MainWindow {
 		});
 
 		// Label de tiempo entre paquetes
-		JLabel lblTiempoEntre = new JLabel("Tiempo entre paquetes:");
+		lblTiempoEntre = new JLabel("Tiempo entre paquetes:");
 		lblTiempoEntre.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblTiempoEntre, "6, 12");
 		// Spinner de tiempo entre paquetes
@@ -297,7 +300,7 @@ public class MainWindow {
 		});
 
 		// Label de tiempo entre envios
-		JLabel lblTiempoEntre_1 = new JLabel("Tiempo entre envios:");
+		lblTiempoEntre_1 = new JLabel("Tiempo entre envios:");
 		lblTiempoEntre_1.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblTiempoEntre_1, "6, 14");
 		// Spinner de tiempo entre envios
@@ -314,7 +317,7 @@ public class MainWindow {
 		});
 
 		// Label de ip de servidor
-		JLabel lblServerIp = new JLabel("Server IP:");
+		lblServerIp = new JLabel("Server IP:");
 		lblServerIp.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblServerIp, "10, 12");
 		// IP del servidor
@@ -366,7 +369,7 @@ public class MainWindow {
 		panePrincipal.add(txtUltimaActualizacion, "12, 16");
 
 		// Label de id de scanner
-		JLabel lblIdscanner = new JLabel("ID-Scanner:");
+		lblIdscanner = new JLabel("ID-Scanner:");
 		lblIdscanner.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(lblIdscanner, "10, 18");
 		// Id de scanner
@@ -517,12 +520,16 @@ public class MainWindow {
 	}
 	
 	private void intercambiarHabilitacionDeConfiguracion(boolean valor){
-		chkBoxAP.setEnabled( valor );
-		chkBoxAll.setEnabled( valor );
-		chkBoxFakeAP.setEnabled( valor );
-		tiempoEntrePaquetes.setEnabled( valor );
-		tiempoEntreEnvios.setEnabled( valor );
-		txtServerIP.setEnabled( valor );
-		idScanner.setEnabled( valor );
+		chkBoxAP.setEnabled(valor);
+		chkBoxAll.setEnabled(valor);
+		chkBoxFakeAP.setEnabled(valor);
+		tiempoEntrePaquetes.setEnabled(valor);
+		tiempoEntreEnvios.setEnabled(valor);
+		txtServerIP.setEnabled(valor);
+		idScanner.setEnabled(valor);
+		lblTiempoEntre.setEnabled(valor);
+		lblServerIp.setEnabled(valor);
+		lblTiempoEntre_1.setEnabled(valor);
+		lblIdscanner.setEnabled(valor);
 	}
 }

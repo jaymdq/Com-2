@@ -1,0 +1,1 @@
+iwlist $1 frequency | egrep "Current*" | egrep -o "Channel [[:digit:]]*" | cut -d' ' -f2

@@ -166,6 +166,7 @@ public class Card {
 			toreturn = status;
 		// Si la tarjeta esta activa se devuelven los dispositivos
 		else {
+			toreturn = "Running on [" + monitor + "]	Current Channel [" + getChannel() + "] \n\n";
 			toreturn = toreturn + AP.TITLE + "\n";
 			for (DispositivoABS ap : aps.values())
 				toreturn = toreturn + ap.toString() + "\n";
@@ -268,6 +269,19 @@ public class Card {
 	// Setea el tiempo del ultimo intento de envio al servidor
 	public void setLastSend(String lastsend) {
 		this.lastsend = lastsend;
+	}
+	
+	private int getChannel() {			
+		String command[] = {"bash","./scripts/get_channel.sh",card};
+		int idtask = taskManager.start(command, null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		try {
+			String line = buff.readLine();
+			return Integer.parseInt(line);
+		} catch (IOException e) {
+			return -1;
+		}
 	}
 
 }
