@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
+import parser.Parser;
 import taskmanager.taskManager;
 
 public class Card {
@@ -18,8 +19,10 @@ public class Card {
 	private Config config;
 	private Thread listenerthread;
 	private Thread removerthread;
+	private Thread parserthread;
 	private Remover remover;
 	private Listener listener;
+	private Parser parser;
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
@@ -68,7 +71,7 @@ public class Card {
 			active = false;
 			setStatus("");
 			stopTshark();
-			toManaged();
+			toManaged();	
 			aps.clear();
 			clients.clear();
 		}
@@ -104,6 +107,9 @@ public class Card {
 		listenerthread.start();
 		removerthread = new Thread(remover);
 		removerthread.start();
+		parser = new Parser(String.valueOf(config.idScanner),config.timeSend);
+		parserthread = new Thread(parser);
+		parserthread.start();
 	}
 	
 	private void stopTshark() {
@@ -116,6 +122,10 @@ public class Card {
 		if (removerthread != null) {
 			removerthread.interrupt();
 			removerthread = null;
+		}
+		if (parserthread != null) {
+			parserthread.interrupt();
+			parserthread = null;
 		}
 	}
 	
