@@ -33,7 +33,6 @@ import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -91,15 +90,7 @@ public class MainWindow {
 
 	// Inicializa la ventana
 	public MainWindow() {
-		String[] command = {"bash","-c","cat ./scripts/allowedtypes.txt"};
-		int idtask = taskManager.start(command, null);
-		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
-		BufferedReader buff = new BufferedReader(inreader);
-		try {
-			String line = null;
-			while ( (line=buff.readLine()) != null)
-				Card.addTypes(line.substring(0,4));
-		} catch (IOException e) {}
+		loadTypes();
 		initialize();
 	}
 
@@ -331,12 +322,25 @@ public class MainWindow {
 		txtServerIP.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				//Aca se le pasa a la clase card la nueva ip
+				//Ac� se le pasa a la clase card la nueva ip
 
-				//Primero se verifica que sea valida
-				boolean condicion = IPValida(txtServerIP.getText());
+				//Primero se verifica que sea v�lida
+				String arreglo[] = txtServerIP.getText().split(".");
+				boolean condicion = true;
+				for ( int i = 0; i < arreglo.length ; i++){
+					short num = -1;
+					try{
+						num = (short) Integer.parseInt(arreglo[i]);
+					} catch (Exception e ){ 
+						condicion = false;
+					}
+					if (num < 0 && num > 255){
+						//Inv�lido
+						condicion = false;
+					}
+				}
 
-				//Si es valido se envia
+				//Si es v�lido se envia
 				if (condicion){
 					txtServerIP.setForeground( Color.GREEN );
 					if (selected != null)
@@ -350,12 +354,12 @@ public class MainWindow {
 
 			@Override
 			public void focusGained(FocusEvent e) {
+
 				txtServerIP.setForeground( Color.BLACK );
 			}
 		});
 		txtServerIP.setColumns(15);
 		txtServerIP.setText("190.19.175.174");
-		txtServerIP.setForeground( Color.GREEN );
 		txtServerIP.setFont(new Font("Dialog", Font.BOLD, 16));
 		panePrincipal.add(txtServerIP, "12, 12, fill, default");
 
@@ -437,7 +441,6 @@ public class MainWindow {
 		else
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
 
-		intercambiarHabilitacionDeConfiguracion( ! active );
 	}
 
 	// Cuando se selecciona otra tarjeta se carga su configuración
@@ -485,42 +488,19 @@ public class MainWindow {
 		taskManager.waitfor(idtask);
 	}
 
-	private boolean IPValida(String ip){
-
+	private void loadTypes() {
+		String[] command = {"bash","-c","cat ./scripts/allowedtypes.txt"};
+		int idtask = taskManager.start(command, null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
 		try {
-			if (ip == null || ip.isEmpty()) {
-				return false;
+			String line = null;
+			while ( (line=buff.readLine()) != null) {
+				// Si no es una linea en blanco (mas de 3 caracteres) y no empieza con #
+				// TODO ver si se puede hacer el line.separator en lugar de mas de 3 caracteres
+				if (!line.startsWith("#") && line.length()> 3)
+					Card.addTypes(line.substring(0,4));
 			}
-
-			String[] partes = ip.split( "\\." );
-			if ( partes.length != 4 ) {
-				return false;
-			}
-
-			for ( String s : partes ) {
-				int i = Integer.parseInt( s );
-				if ( (i < 0) || (i > 255) ) {
-					return false;
-				}
-			}
-			if(ip.endsWith(".")) {
-				return false;
-			}
-
-			return true;
-		} catch (NumberFormatException nfe) {
-			return false;
-		}
+		} catch (IOException e) {}
 	}
-
-	private void intercambiarHabilitacionDeConfiguracion(boolean valor){
-		chkBoxAP.setEnabled( valor );
-		chkBoxAll.setEnabled( valor );
-		chkBoxFakeAP.setEnabled( valor );
-		tiempoEntrePaquetes.setEnabled( valor );
-		tiempoEntreEnvios.setEnabled( valor );
-		txtServerIP.setEnabled( valor );
-		idScanner.setEnabled( valor );
-	}
-	
 }
