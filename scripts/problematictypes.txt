@@ -1,2 +1,0 @@
-0x1d	Frame ACK (no se puede extraer ni MAC origen ni MAC destino)
-0x20	Frame que se puede enviar entre dispositivos haciendo que se confunda la consola
