@@ -322,25 +322,12 @@ public class MainWindow {
 		txtServerIP.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				//Ac� se le pasa a la clase card la nueva ip
+				//Aca se le pasa a la clase card la nueva ip
 
-				//Primero se verifica que sea v�lida
-				String arreglo[] = txtServerIP.getText().split(".");
-				boolean condicion = true;
-				for ( int i = 0; i < arreglo.length ; i++){
-					short num = -1;
-					try{
-						num = (short) Integer.parseInt(arreglo[i]);
-					} catch (Exception e ){ 
-						condicion = false;
-					}
-					if (num < 0 && num > 255){
-						//Inv�lido
-						condicion = false;
-					}
-				}
+				//Primero se verifica que sea valida
+				boolean condicion = IPValida(txtServerIP.getText());
 
-				//Si es v�lido se envia
+				//Si es valido se envia
 				if (condicion){
 					txtServerIP.setForeground( Color.GREEN );
 					if (selected != null)
@@ -348,10 +335,7 @@ public class MainWindow {
 				}else{
 					txtServerIP.setForeground( Color.RED );
 				}
-
-
 			}
-
 			@Override
 			public void focusGained(FocusEvent e) {
 
@@ -440,7 +424,7 @@ public class MainWindow {
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stop.png")));
 		else
 			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
-
+		intercambiarHabilitacionDeConfiguracion(!active);
 	}
 
 	// Cuando se selecciona otra tarjeta se carga su configuración
@@ -502,5 +486,43 @@ public class MainWindow {
 					Card.addTypes(line.substring(0,4));
 			}
 		} catch (IOException e) {}
+	}
+	
+	private boolean IPValida(String ip){
+
+		try {
+			if (ip == null || ip.isEmpty()) {
+				return false;
+			}
+
+			String[] partes = ip.split( "\\." );
+			if ( partes.length != 4 ) {
+				return false;
+			}
+
+			for ( String s : partes ) {
+				int i = Integer.parseInt( s );
+				if ( (i < 0) || (i > 255) ) {
+					return false;
+				}
+			}
+			if(ip.endsWith(".")) {
+				return false;
+			}
+
+			return true;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+	
+	private void intercambiarHabilitacionDeConfiguracion(boolean valor){
+		chkBoxAP.setEnabled( valor );
+		chkBoxAll.setEnabled( valor );
+		chkBoxFakeAP.setEnabled( valor );
+		tiempoEntrePaquetes.setEnabled( valor );
+		tiempoEntreEnvios.setEnabled( valor );
+		txtServerIP.setEnabled( valor );
+		idScanner.setEnabled( valor );
 	}
 }
