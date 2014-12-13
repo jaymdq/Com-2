@@ -12,7 +12,6 @@ import taskmanager.taskManager;
 public class Card {
 	
 	private String card;
-	private String monitor;
 	private int idchannels;
 	private int idtshark;
 	private boolean active;
@@ -41,7 +40,6 @@ public class Card {
 		idtshark = 0;
 		setStatus("");
 		config = new Config();
-		monitor = null;
 		listenerthread = null;
 		removerthread = null;
 		lastsend = null;
@@ -57,9 +55,8 @@ public class Card {
 	public synchronized void start() {
 		if (!active) {
 			setStatus("");
-			if (initCard()) {
-				activateMonitor();
-				tshark();
+			if (toMonitor()) {
+				startTshark();
 				active = true;
 			}
 		}
@@ -70,15 +67,16 @@ public class Card {
 		if (active) {
 			active = false;
 			setStatus("");
-			desactivateMonitor();
+			stopTshark();
+			toManaged();
 			aps.clear();
 			clients.clear();
 		}
 	}
 	
 	// Inicia la tarjeta
-	private boolean initCard() {
-		String command[] = {"bash","./scripts/init_card.sh",card};
+	private boolean toMonitor() {
+		String command[] = {"bash","./scripts/to_monitor.sh",card};
 		int idtask = taskManager.start(command,null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
 		BufferedReader buff = new BufferedReader(inreader);
@@ -95,42 +93,20 @@ public class Card {
 		return toreturn;
 	}
 
-	// Activa el modo monitor
-	private void activateMonitor() {
-		String command[] = {"bash","./scripts/activate_monitor.sh",card};
-		int idtask = taskManager.start(command, null);
-		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
-		BufferedReader buff = new BufferedReader(inreader);
-		try {
-			String line = null;
-			while ( (line=buff.readLine()) != null){
-				if (line.contains("mon"))
-					monitor = line;
-				else 
-					setStatus(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	// Tshark y cambio de canales
-	private void tshark() {
-		if (monitor != null) {
-			String commandtshark[] = {"bash","./scripts/tshark.sh", monitor};
-			String commandchannels[] = {"bash","./scripts/change_channels.sh", monitor};
-			idtshark = taskManager.start(commandtshark,null);
-			idchannels = taskManager.start(commandchannels, null);
-			listener.setInputStream(taskManager.getInputStream(idtshark));
-			listenerthread = new Thread(listener);
-			listenerthread.start();
-			removerthread = new Thread(remover);
-			removerthread.start();
-		}
+	private void startTshark() {
+		String commandtshark[] = {"bash","./scripts/tshark.sh", card};
+		String commandchannels[] = {"bash","./scripts/change_channels.sh", card};
+		idtshark = taskManager.start(commandtshark,null);
+		idchannels = taskManager.start(commandchannels, null);
+		listener.setInputStream(taskManager.getInputStream(idtshark));
+		listenerthread = new Thread(listener);
+		listenerthread.start();
+		removerthread = new Thread(remover);
+		removerthread.start();
 	}
 	
-	// Desactiva el modo monitor
-	private void desactivateMonitor() {
+	private void stopTshark() {
 		taskManager.stop(idchannels);
 		taskManager.stop(idtshark);
 		if (listenerthread != null) {
@@ -141,10 +117,13 @@ public class Card {
 			removerthread.interrupt();
 			removerthread = null;
 		}
-		String command[] = {"bash","./scripts/desactivate_monitor.sh",monitor};
+	}
+	
+	// Desactiva el modo monitor
+	private void toManaged() {
+		String command[] = {"bash","./scripts/to_managed.sh",card};
 		int idtask = taskManager.start(command, null);
 		taskManager.waitfor(idtask);
-		monitor = null;
 	}
 
 	// Indica si el monitor esta activo o no
@@ -166,7 +145,7 @@ public class Card {
 			toreturn = status;
 		// Si la tarjeta esta activa se devuelven los dispositivos
 		else {
-			toreturn = "Running on [" + monitor + "]	Current Channel [" + getChannel() + "] \n\n";
+			toreturn = "Running on [" + card + "]	Current Channel [" + getChannel() + "] \n\n";
 			toreturn = toreturn + AP.TITLE + "\n";
 			for (DispositivoABS ap : aps.values())
 				toreturn = toreturn + ap.toString() + "\n";
