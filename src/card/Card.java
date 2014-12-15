@@ -204,11 +204,11 @@ public class Card {
 			ap.update(packet);
 		// Sino, lo agrego
 		else {
-			ap = new AP(packet,config.delaymac);
+			ap = new AP(packet);
 			aps.put(packet.origen, ap);
 		}
 		// Si se cumplen las condiciones, enviar
-		if (ap.needUpdate() && config.sendap)
+		if (ap.needUpdate(config.delaymac) && config.sendap)
 			sendPacket(packet);
 	}
 	
@@ -220,11 +220,11 @@ public class Card {
 			client.update(packet);
 		// Sino, lo agrego
 		else {
-			client = new Client(packet,config.delaymac);
+			client = new Client(packet);
 			clients.put(packet.origen, client);
 		}
 		// Si se cumplen las condiciones, enviar
-		if ( client.needUpdate() && (packet.type.equals(Packet.PROBEREQ) || config.sendall))
+		if ( client.needUpdate(config.delaymac) && (packet.type.equals(Packet.PROBEREQ) || config.sendall))
 			sendPacket(packet);
 	}
 	

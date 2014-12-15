@@ -13,21 +13,19 @@ public abstract class DispositivoABS {
 	protected int packets;
 	protected Date last;
 	protected String mac;
-	protected long delta;
 	
 	// Constructor
-	public DispositivoABS(Packet packet, long delta) {
+	public DispositivoABS(Packet packet) {
 		last = packet.time;
 		mac = packet.origen;
 		packets = 1;
 		power = packet.power;
-		this.delta = delta;
 		initialize(packet);
 		analyzePacket(packet);
 	}
 	
 	// Verificador de tiempo cumplido
-	public boolean needUpdate() {
+	public boolean needUpdate(long delta) {
 		long now = System.currentTimeMillis();
 		if (now - last.getTime() > delta) {
 			last = new Date(now);

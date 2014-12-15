@@ -13,8 +13,8 @@ public class Client extends DispositivoABS{
 	public String bssid;
 	public Vector<String> probes;
 	
-	public Client(Packet packet, long delta) {
-		super(packet, delta);
+	public Client(Packet packet) {
+		super(packet);
 	}
 
 	// String

@@ -9,8 +9,8 @@ public class AP extends DispositivoABS {
 	// Variables propias de un AP
 	public String essid;
 	
-	public AP(Packet packet, long delta) {
-		super(packet,delta);
+	public AP(Packet packet) {
+		super(packet);
 	}
 	
 	// String
