@@ -14,6 +14,9 @@ import javax.swing.JPanel;
 import card.Card;
 import card.Config;
 
+import com.alee.laf.WebLookAndFeel;
+import com.alee.managers.language.LanguageConstants;
+import com.alee.managers.language.LanguageManager;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -78,6 +81,7 @@ public class ProbeRadar {
 	private JLabel lblServerIp;
 	private JLabel lblTiempoEntre_1;
 	private JLabel lblIdscanner;
+	private JLabel label;
 	/**
 	 * Launch the application.
 	 */
@@ -85,6 +89,9 @@ public class ProbeRadar {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					//LanguageManager.setDefaultLanguage(LanguageConstants.SPANISH);
+					//WebLookAndFeel.install();
+					
 					ProbeRadar window = new ProbeRadar();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -135,7 +142,7 @@ public class ProbeRadar {
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
-				new RowSpec[] {
+			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -163,12 +170,19 @@ public class ProbeRadar {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),}));
+				RowSpec.decode("default:grow"),
+				FormFactory.RELATED_GAP_ROWSPEC,}));
+		
+		label = new JLabel("");
+		label.setIcon(new ImageIcon(ProbeRadar.class.getResource("/images/top.png")));
+		panePrincipal.add(label, "6, 4, 6, 1, center, default");
 		JScrollPane scrollPane = new JScrollPane();
 		panePrincipal.add(scrollPane, "2, 28, 12, 1, fill, fill");
 
 		// Consola
 		JEditorPane console = new JEditorPane();
+		console.setForeground(new Color(0, 128, 0));
+		console.setBackground(Color.BLACK);
 		console.setFont(new Font("Monospaced", Font.BOLD, 16));
 		console.setEditable(false);
 		scrollPane.setViewportView(console);
