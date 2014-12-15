@@ -18,10 +18,10 @@ public class EnviaDatos {
 	}
 
 
-	public String MultipleFrameRecorder(String datos){
+	public String MultipleFrameRecorder(String datos,String ip){
 		String salida = "";
 		try {
-			WebServiceStub servicio = new WebServiceStub("http://190.19.175.174:8008/Monitores.WS/services/WebService?wsdl");
+			WebServiceStub servicio = new WebServiceStub("http://"+ ip +":8008/Monitores.WS/services/WebService?wsdl");
 			WebServiceStub.InsertMultipleFrames request = new WebServiceStub.InsertMultipleFrames();
 			request.setData(datos);			
 			WebServiceStub.InsertMultipleFramesResponse res = servicio.insertMultipleFrames(request);
@@ -35,9 +35,9 @@ public class EnviaDatos {
 	}
 
 
-	public String enviarDatos(String datos){
+	public String enviarDatos(String datos,String ip){
 		//Se envian datos y se devuelve el resultado de la transacci�n
-		return MultipleFrameRecorder(datos);		
+		return MultipleFrameRecorder(datos,ip);		
 	}
 
 }

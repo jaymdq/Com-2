@@ -64,7 +64,7 @@ public class Parser implements Runnable{
 					toinsert= toinsert.substring(0, toinsert.length() - 1);
 
 					//Se manda lo obtenido
-					String resultado =  EnviaDatos.getInstancia().enviarDatos(toinsert);
+					String resultado =  EnviaDatos.getInstancia().enviarDatos(toinsert,config.serverip);
 					if (resultado.toLowerCase().contains("ok")) {
 						config.serverstatus = "Online";
 						tosend.clear();

@@ -1,4 +1,6 @@
-package gui;
+
+
+import gui.Updater;
 
 import java.awt.EventQueue;
 
@@ -55,7 +57,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Toolkit;
 
-public class MainWindow {
+public class ProbeRadar {
 
 	private JFrame frame;
 	private JButton btnStartStop;
@@ -83,7 +85,7 @@ public class MainWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
+					ProbeRadar window = new ProbeRadar();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -93,15 +95,15 @@ public class MainWindow {
 	}
 
 	// Inicializa la ventana
-	public MainWindow() {
+	private ProbeRadar() {
 		loadTypes();
 		initialize();
 	}
 
 	private void initialize() {
 		// Creo ventana
-		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/images/icon.png")));
+		frame = new JFrame("Probe Radar");
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(ProbeRadar.class.getResource("/images/icon.png")));
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -114,7 +116,7 @@ public class MainWindow {
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setTitle("Probe Radar");
-
+		
 		// Creo panel con columnas
 		JPanel panePrincipal = new JPanel();
 		frame.getContentPane().add(panePrincipal, BorderLayout.WEST);
@@ -197,7 +199,7 @@ public class MainWindow {
 
 		// Creo boton de actualizar tarjetas
 		JButton btnRefresh = new JButton("");
-		btnRefresh.setIcon(new ImageIcon(MainWindow.class.getResource("/images/refresh.png")));
+		btnRefresh.setIcon(new ImageIcon(ProbeRadar.class.getResource("/images/refresh.png")));
 		btnRefresh.setBorder(BorderFactory.createEmptyBorder());
 		btnRefresh.setContentAreaFilled(false);
 		panePrincipal.add(btnRefresh, "2, 4, left, default");
@@ -231,7 +233,7 @@ public class MainWindow {
 			}
 		});
 		btnStartStop.setFont(new Font("Dialog", Font.BOLD, 16));
-		btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
+		btnStartStop.setIcon(new ImageIcon(ProbeRadar.class.getResource("/images/play.png")));
 		btnStartStop.setBorder(BorderFactory.createEmptyBorder());
 		btnStartStop.setContentAreaFilled(false);
 		panePrincipal.add(btnStartStop, "12, 2, 1, 3, right, center");
@@ -330,7 +332,7 @@ public class MainWindow {
 				//Aca se le pasa a la clase card la nueva ip
 
 				//Primero se verifica que sea valida
-				boolean condicion = IPValida(txtServerIP.getText());
+				boolean condicion = IPValida(txtServerIP.getText().trim());
 
 				//Si es valido se envia
 				if (condicion){
@@ -426,9 +428,9 @@ public class MainWindow {
 	// Setea el boton de play/stop
 	private void setPlayBtn(boolean active) {
 		if (active)
-			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/stop.png")));
+			btnStartStop.setIcon(new ImageIcon(ProbeRadar.class.getResource("/images/stop.png")));
 		else
-			btnStartStop.setIcon(new ImageIcon(MainWindow.class.getResource("/images/play.png")));
+			btnStartStop.setIcon(new ImageIcon(ProbeRadar.class.getResource("/images/play.png")));
 		intercambiarHabilitacionDeConfiguracion(!active);
 	}
 
