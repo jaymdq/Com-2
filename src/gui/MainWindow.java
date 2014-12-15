@@ -295,7 +295,7 @@ public class MainWindow {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().delaymac = (int) tiempoEntrePaquetes.getValue();
+					selected.getConfig().delaymac = (int) tiempoEntrePaquetes.getValue()*1000;
 			}
 		});
 
@@ -312,7 +312,7 @@ public class MainWindow {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().delaysend = (int) tiempoEntreEnvios.getValue();
+					selected.getConfig().delaysend = (int) tiempoEntreEnvios.getValue()*1000;
 			}
 		});
 
@@ -439,8 +439,8 @@ public class MainWindow {
 			chkBoxAP.setSelected(config.sendap);
 			chkBoxAll.setSelected(config.sendall);
 			chkBoxFakeAP.setSelected(config.fakeap);
-			tiempoEntrePaquetes.setValue(config.delaymac);
-			tiempoEntreEnvios.setValue(config.delaysend);
+			tiempoEntrePaquetes.setValue(config.delaymac/1000);
+			tiempoEntreEnvios.setValue(config.delaysend/1000);
 			txtServerIP.setText(config.serverip);
 			idScanner.setValue(config.idscanner);
 			setPlayBtn(selected.isActive());

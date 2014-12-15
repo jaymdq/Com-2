@@ -51,7 +51,7 @@ public class Parser implements Runnable{
 		while (true){
 
 			try {
-				Thread.sleep(config.delaysend*1000);
+				Thread.sleep(config.delaysend);
 			} catch (InterruptedException e1) {}
 			
 			synchronized (tosend) {
