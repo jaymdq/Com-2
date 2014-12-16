@@ -432,7 +432,6 @@ public class ProbeRadar {
 	}
 
 	// Mata los procesos que puedan molestar
-	// TODO que garcha hacemos con esto?
 	private void killProcess() {
 		String command[] = {"bash","./scripts/kill_process.sh"};
 		int idtask = taskManager.start(command, null);
@@ -466,33 +465,6 @@ public class ProbeRadar {
 		}
 	}
 
-	// Chequea el status del servidor
-	// TODO que garcha hacemos con esto?
-	private void probarServidor(){
-		String command[] = {"sh", "-c","ping -c 1 "+ txtServerIP.getText() +" | grep \"received\" | cut -d\",\" -f\"3\" | grep -o '[0-9]*'"};
-		int idtask = taskManager.start(command,null);
-		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
-		BufferedReader buff = new BufferedReader(inreader);
-		try {
-			String line = null;
-			while ( (line=buff.readLine()) != null)
-				if (line.equals("0")){
-					//Servidor y conexion buena
-					txtServerStatus.setText("Buena");
-					txtServerStatus.setForeground( Color.GREEN );
-					txtUltimaActualizacion.setText( new SimpleDateFormat("dd-mm-yyyy HH:mm:ss").format(new Date()) );
-				}else{
-					//Servidor o conexion mala
-					txtServerStatus.setText("Mala");
-					txtServerStatus.setForeground( Color.RED );
-				}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		taskManager.waitfor(idtask);
-	}
-
 	private void loadTypes() {
 		String[] command = {"bash","-c","cat ./scripts/allowedtypes.txt"};
 		int idtask = taskManager.start(command, null);
@@ -501,8 +473,6 @@ public class ProbeRadar {
 		try {
 			String line = null;
 			while ( (line=buff.readLine()) != null) {
-				// Si no es una linea en blanco (mas de 3 caracteres) y no empieza con #
-				// TODO ver si se puede hacer el line.separator en lugar de mas de 3 caracteres
 				if (!line.startsWith("#") && line.length()> 3)
 					Card.addTypes(line.substring(0,4));
 			}
