@@ -118,7 +118,7 @@ public class ProbeRadar {
 					availableCards.get(c).stop();
 			}
 		});
-		frame.setBounds(100, 100, 1200,600);
+		frame.setBounds(100, 100, 1200,700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
