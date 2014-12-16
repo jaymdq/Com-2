@@ -1,5 +1,7 @@
 package card;
 
+import java.util.Vector;
+
 public class Config {
 
 	public boolean sendap;
@@ -11,6 +13,7 @@ public class Config {
 	public int idscanner;
 	public String serverstatus;
 	public String lastsend;
+	public Vector<String> channels = new Vector<String>();
 	
 	public Config() {
 		sendap = false;

@@ -26,6 +26,7 @@ public class Card {
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
+	private Vector<String> channels;
 	private static Vector<String> allowedtypes = new Vector<String>();;
 	
 	// Agreaga un tipo aceptado por el programa
@@ -247,6 +248,11 @@ public class Card {
 		} catch (IOException e) {
 			return -1;
 		}
+	}
+
+	public void setChannels(Vector<String> channels) {
+		this.channels = channels;
+		
 	}
 
 }
