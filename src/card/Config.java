@@ -13,7 +13,7 @@ public class Config {
 	public int idscanner;
 	public String serverstatus;
 	public String lastsend;
-	public Vector<String> channels = new Vector<String>();
+	public Vector<String> channels;
 	
 	public Config() {
 		sendap = false;
@@ -25,6 +25,7 @@ public class Config {
 		idscanner = 14;
 		lastsend = "-";
 		serverstatus = "N/C";
+		channels = new Vector<String>();
 	}
 
 }

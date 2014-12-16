@@ -14,9 +14,6 @@ import javax.swing.JPanel;
 import card.Card;
 import card.Config;
 
-import com.alee.laf.WebLookAndFeel;
-import com.alee.managers.language.LanguageConstants;
-import com.alee.managers.language.LanguageManager;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -61,17 +58,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Toolkit;
-
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-
-import java.awt.List;
-import java.awt.Choice;
-
-import javax.swing.BoxLayout;
-
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -393,7 +379,7 @@ public class ProbeRadar {
 		btnStartStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null) {
-					selected.setChannels(obtenerCanalesATratar());
+					selected.getConfig().channels = obtenerCanalesATratar();
 					if (selected.isActive())
 						selected.stop();
 					else	

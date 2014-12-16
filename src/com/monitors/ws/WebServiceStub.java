@@ -13,15 +13,14 @@
         *  WebServiceStub java implementation
         */
 
-        @SuppressWarnings("rawtypes")
+        
         public class WebServiceStub extends org.apache.axis2.client.Stub
         {
         protected org.apache.axis2.description.AxisOperation[] _operations;
 
         //hashmaps to keep the fault mapping
-       
-		private java.util.HashMap faultExceptionNameMap = new java.util.HashMap();
-		private java.util.HashMap faultExceptionClassNameMap = new java.util.HashMap();
+        private java.util.HashMap faultExceptionNameMap = new java.util.HashMap();
+        private java.util.HashMap faultExceptionClassNameMap = new java.util.HashMap();
         private java.util.HashMap faultMessageMap = new java.util.HashMap();
 
         private static int counter = 0;
@@ -272,8 +271,7 @@
 
                     
 
-                            @SuppressWarnings("unchecked")
-							public  com.monitors.ws.WebServiceStub.InsertMultipleDeviceDTOResponse insertMultipleDeviceDTO(
+                            public  com.monitors.ws.WebServiceStub.InsertMultipleDeviceDTOResponse insertMultipleDeviceDTO(
 
                             com.monitors.ws.WebServiceStub.InsertMultipleDeviceDTO insertMultipleDeviceDTO0)
                         
@@ -450,8 +448,7 @@
                             }
                             }
 
-                           
-							public void onError(java.lang.Exception error) {
+                            public void onError(java.lang.Exception error) {
 								if (error instanceof org.apache.axis2.AxisFault) {
 									org.apache.axis2.AxisFault f = (org.apache.axis2.AxisFault) error;
 									org.apache.axiom.om.OMElement faultElt = f.getDetail();
@@ -543,8 +540,7 @@
 
                     
 
-                            @SuppressWarnings("unchecked")
-							public  com.monitors.ws.WebServiceStub.DeleteFramesResponse deleteFrames(
+                            public  com.monitors.ws.WebServiceStub.DeleteFramesResponse deleteFrames(
 
                             com.monitors.ws.WebServiceStub.DeleteFrames deleteFrames2)
                         

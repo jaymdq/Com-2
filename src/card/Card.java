@@ -26,7 +26,6 @@ public class Card {
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
-	private Vector<String> channels;
 	private static Vector<String> allowedtypes = new Vector<String>();;
 	
 	// Agreaga un tipo aceptado por el programa
@@ -96,7 +95,11 @@ public class Card {
 	// Tshark y cambio de canales
 	private void startTshark() {
 		String commandtshark[] = {"bash","./scripts/tshark.sh", card};
-		String commandchannels[] = {"bash","./scripts/change_channels.sh", card};
+		String channelsiteration = "";
+		for (String channel : config.channels)
+			channelsiteration += channel + " ";
+		System.out.println(channelsiteration);
+		String commandchannels[] = {"bash","./scripts/change_channels.sh", card, channelsiteration};
 		idtshark = taskManager.start(commandtshark,null);
 		idchannels = taskManager.start(commandchannels, null);
 		listener.setInputStream(taskManager.getInputStream(idtshark));
@@ -250,9 +253,9 @@ public class Card {
 		}
 	}
 
-	public void setChannels(Vector<String> channels) {
+	/*public void setChannels(Vector<String> channels) {
 		this.channels = channels;
 		
-	}
+	}*/
 
 }
