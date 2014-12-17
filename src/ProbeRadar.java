@@ -656,8 +656,11 @@ public class ProbeRadar {
 		lblServerStatus.setEnabled(value);
 		txtLastUpdate.setEnabled(value);
 		lblLastUpdate.setEnabled(value);
-		for (Component c : channelsPanel.getComponents())
-			c.setEnabled(value);
+		for (Component c : channelsPanel.getComponents()) {
+			JToggleButton btn = (JToggleButton) c;
+			btn.setEnabled(value && (btn.getText().equals("Todos") || selected.getAllowedchannels().contains(btn.getText())));
+		}
+		
 	}
 	
 	private void setAllEnabled(boolean value) {
