@@ -30,9 +30,9 @@ public class Updater implements Runnable {
 	public synchronized void update() {
 		if (card != null) {
 			consola.setText(card.toString());
-			serverstatus.setText(card.getConfig().serverstatus);
-			lastupdate.setText(card.getConfig().lastsend);
-			if (card.getConfig().serverstatus.equals(Parser.ONLINE))
+			serverstatus.setText(card.getConfig().serverStatus);
+			lastupdate.setText(card.getConfig().lastSend);
+			if (card.getConfig().serverStatus.equals(Parser.ONLINE))
 				serverstatus.setForeground(Color.GREEN);
 			else
 				serverstatus.setForeground(Color.RED);

@@ -13,7 +13,7 @@ public abstract class DispositivoABS {
 	// Constructor
 	public DispositivoABS(Packet packet) {
 		last = packet.time;
-		mac = packet.origen;
+		mac = packet.source;
 		packets = 1;
 		power = packet.power;
 		initialize(packet);

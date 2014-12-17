@@ -26,8 +26,8 @@ public class Packet {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss.SSS",new Locale("en_US"));
 
 	public String type = "";
-	public String origen = "";
-	public String destino = "";
+	public String source = "";
+	public String destiny = "";
 	public Date time;
 	public int power = 0;
 	public String essid = "";
@@ -36,8 +36,8 @@ public class Packet {
 	public Packet(String[] parseado) {
 		// Inicializo las variables
 		type = "";
-		origen = "";
-		destino = "";
+		source = "";
+		destiny = "";
 		time = null;
 		power = 0;
 		essid = "";
@@ -45,8 +45,8 @@ public class Packet {
 		try {
 			setDate(parseado[0]);
 			type = parseado[1];
-			origen = parseado[2];
-			destino = parseado[3];
+			source = parseado[2];
+			destiny = parseado[3];
 			if (parseado.length > 4)
 				power = Math.abs(Integer.parseInt(parseado[4]));
 			if (parseado.length > 5)
@@ -61,8 +61,8 @@ public class Packet {
 	// String
 	public String toString() {
 		String s = "Type: " + type + "\n";
-		s = s+ "Origen: " + origen + "\n";
-		s = s+ "Destino: " + destino + "\n";
+		s = s+ "Origen: " + source + "\n";
+		s = s+ "Destino: " + destiny + "\n";
 		s = s+ "Essid: " + essid;
 		return s;
 	}

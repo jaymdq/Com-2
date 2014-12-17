@@ -303,7 +303,7 @@ public class ProbeRadar {
 		chkBoxAP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().sendap = chkBoxAP.isSelected();
+					selected.getConfig().sendAP = chkBoxAP.isSelected();
 			}
 		});
 		
@@ -314,7 +314,7 @@ public class ProbeRadar {
 		chkBoxAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().sendall = chkBoxAll.isSelected();
+					selected.getConfig().sendAll = chkBoxAll.isSelected();
 			}
 		});
 
@@ -325,7 +325,7 @@ public class ProbeRadar {
 		chkBoxFakeAP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().fakeap = chkBoxFakeAP.isSelected();
+					selected.getConfig().fakeAP = chkBoxFakeAP.isSelected();
 			}
 		});
 		
@@ -336,7 +336,7 @@ public class ProbeRadar {
 		chkBoxOnlyAP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().onlyap = chkBoxOnlyAP.isSelected();
+					selected.getConfig().onlyAP = chkBoxOnlyAP.isSelected();
 				setMonitorEnabled(!chkBoxOnlyAP.isSelected());
 			}
 		});
@@ -354,7 +354,7 @@ public class ProbeRadar {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().delaymac = (int) delayPacket
+					selected.getConfig().delayMac = (int) delayPacket
 							.getValue() * 1000;
 			}
 		});
@@ -372,7 +372,7 @@ public class ProbeRadar {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().delaysend = (int) delaySend
+					selected.getConfig().delaySend = (int) delaySend
 							.getValue() * 1000;
 			}
 		});
@@ -395,7 +395,7 @@ public class ProbeRadar {
 				if (condicion) {
 					txtServerIP.setForeground(Color.BLACK);
 					if (selected != null)
-						selected.getConfig().serverip = txtServerIP.getText();
+						selected.getConfig().serverIP = txtServerIP.getText();
 					checkCanPlay();
 				} else {
 					txtServerIP.setForeground(Color.RED);
@@ -445,7 +445,7 @@ public class ProbeRadar {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				if (selected != null)
-					selected.getConfig().idscanner = (int) idScanner.getValue();
+					selected.getConfig().idScanner = (int) idScanner.getValue();
 			}
 		});
 	
@@ -542,7 +542,7 @@ public class ProbeRadar {
 		return cards;
 	}
 
-	// Mata los procesos que puedan molestar
+	// Mata los procesos que puedan molestar (lo dejamos por si las dudas)
 	private void killProcess() {
 		String command[] = { "bash", "./scripts/kill_process.sh" };
 		int idtask = taskManager.start(command, null);
@@ -566,14 +566,14 @@ public class ProbeRadar {
 		if (selected == null | selected != card) {
 			selected = card;
 			Config config = selected.getConfig();
-			chkBoxAP.setSelected(config.sendap);
-			chkBoxAll.setSelected(config.sendall);
-			chkBoxFakeAP.setSelected(config.fakeap);
-			chkBoxOnlyAP.setSelected(config.onlyap);
-			delayPacket.setValue(config.delaymac / 1000);
-			delaySend.setValue(config.delaysend / 1000);
-			txtServerIP.setText(config.serverip);
-			idScanner.setValue(config.idscanner);
+			chkBoxAP.setSelected(config.sendAP);
+			chkBoxAll.setSelected(config.sendAll);
+			chkBoxFakeAP.setSelected(config.fakeAP);
+			chkBoxOnlyAP.setSelected(config.onlyAP);
+			delayPacket.setValue(config.delayMac / 1000);
+			delaySend.setValue(config.delaySend / 1000);
+			txtServerIP.setText(config.serverIP);
+			idScanner.setValue(config.idScanner);
 			setPlayBtn(selected.isActive());
 			updater.setCard(selected);
 			for (Component c : channelsPanel.getComponents()) {
@@ -582,8 +582,8 @@ public class ProbeRadar {
 				btn.setSelected(selected.getConfig().channels.contains(btn.getText()));
 			}
 			checkAllButton();
-			if (config.onlyap)
-				setMonitorEnabled(!config.onlyap);
+			if (config.onlyAP)
+				setMonitorEnabled(!config.onlyAP);
 			checkCanPlay();
 		}
 	}

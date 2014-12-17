@@ -16,18 +16,18 @@ public class Parser implements Runnable{
 	public static final String ONLINE = "Online";
 	public static final String OFFLINE = "Offline";
 
-	private Vector<Packet> tosend;
+	private Vector<Packet> toSend;
 	private Config config;
 
 	public Parser(Config config){
-		this.tosend = new Vector<Packet>();
+		this.toSend = new Vector<Packet>();
 		this.config = config;
 		active = false;
 	}
 
 	public void addPacket(Packet packet){
-		synchronized (tosend){
-			tosend.add(packet);
+		synchronized (toSend){
+			toSend.add(packet);
 		}
 	}
 	
@@ -38,22 +38,22 @@ public class Parser implements Runnable{
 	public void stop() {
 		active = false;
 	}
-	// Convierte un paquete en una linea de string para enviar al servidor				
-	private String toLine(Packet paquete){
-		String salida = "";
-		salida += config.idscanner + "|" ;
-		salida += sdftoserver.format(paquete.time) + "|" ;
-		salida += paquete.origen.replaceAll(":", "").toUpperCase() + "|" ;
-		salida += paquete.destino.replaceAll(":", "").toUpperCase() + "|" ;
-		salida += paquete.power + "|";
-		salida += paquete.getName() + "|";
-		salida += "DISPOSITIVO" + "|";		//TODO brian: tendria que averiguarse a traves de la MAC 
-		salida += "W" + "|";				// viru: la marca, pero como haces para sacar el SO? eso habria que hacerlo con alguan otra herramienta media chitera
-		if ( paquete.essid.equals("") )
-			salida += "BROADCAST";
+	// Convierte un packet en una linea de string para enviar al servidor				
+	private String toLine(Packet packet){
+		String toreturn = "";
+		toreturn += config.idScanner + "|" ;
+		toreturn += sdftoserver.format(packet.time) + "|" ;
+		toreturn += packet.source.replaceAll(":", "").toUpperCase() + "|" ;
+		toreturn += packet.destiny.replaceAll(":", "").toUpperCase() + "|" ;
+		toreturn += packet.power + "|";
+		toreturn += packet.getName() + "|";
+		toreturn += "DISPOSITIVO" + "|";		//TODO brian: tendria que averiguarse a traves de la MAC 
+		toreturn += "W" + "|";				// viru: la marca, pero como haces para sacar el SO? eso habria que hacerlo con alguan otra herramienta media chitera
+		if ( packet.essid.equals("") )
+			toreturn += "BROADCAST";
 		else
-			salida += paquete.essid;
-		return salida;
+			toreturn += packet.essid;
+		return toreturn;
 	}
 
 	@Override
@@ -62,27 +62,27 @@ public class Parser implements Runnable{
 		while (active){
 
 			try {
-				Thread.sleep(config.delaysend);
+				Thread.sleep(config.delaySend);
 			} catch (InterruptedException e1) {}
 			
-			synchronized (tosend) {
-				if (! tosend.isEmpty()){
+			synchronized (toSend) {
+				if (! toSend.isEmpty()){
 					String toinsert = "";
-					//Proceso los paquetes y los convierto en lineas de string				
-					for (Packet paquete: tosend)
-						toinsert += toLine(paquete) + ";";
+					//Proceso los packets y los convierto en lineas de string				
+					for (Packet packet: toSend)
+						toinsert += toLine(packet) + ";";
 					//Sacar ultimo ";"
 					toinsert= toinsert.substring(0, toinsert.length() - 1);
 
 					//Se manda lo obtenido
-					String resultado =  EnviaDatos.getInstancia().enviarDatos(toinsert,config.serverip);
+					String resultado =  EnviaDatos.getInstancia().enviarDatos(toinsert,config.serverIP);
 					if (resultado.toLowerCase().contains("ok")) {
-						config.serverstatus = ONLINE;
-						tosend.clear();
+						config.serverStatus = ONLINE;
+						toSend.clear();
 					}else{
-						config.serverstatus = OFFLINE;
+						config.serverStatus = OFFLINE;
 					}
-					config.lastsend = sdftointerface.format(new Date()).toString();
+					config.lastSend = sdftointerface.format(new Date()).toString();
 				}
 			}
 		}

@@ -44,7 +44,7 @@ public class Client extends DispositivoABS{
 				break;
 			// Si es un paquete de datos seguro se encuentre conectado
 			case (Packet.ENERGYFRAME) :
-				bssid = packet.destino;
+				bssid = packet.destiny;
 				break;
 		}
 	}

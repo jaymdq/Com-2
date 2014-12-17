@@ -77,9 +77,9 @@ public class Card {
 		if (!active) {
 			setStatus("");
 			if (toMonitor()) {
-				if (!config.onlyap)
+				if (!config.onlyAP)
 					startTshark();
-				if (config.onlyap || config.fakeap)
+				if (config.onlyAP || config.fakeAP)
 					startFakeAP();
 				active = true;
 			}
@@ -91,9 +91,9 @@ public class Card {
 		if (active) {
 			active = false;
 			setStatus("");
-			if (!config.onlyap)
+			if (!config.onlyAP)
 				stopTshark();
-			if (config.onlyap || config.fakeap)
+			if (config.onlyAP || config.fakeAP)
 				stopFakeAP();
 			toManaged();	
 			aps.clear();
@@ -151,7 +151,7 @@ public class Card {
 	private void startFakeAP() {
 		String command[] = {"bash","./scripts/fake_ap.sh", card};
 		idAP = taskManager.start(command, null);
-		if (config.onlyap) {
+		if (config.onlyAP) {
 			setStatus("");
 			setStatus("La tarjeta " + card + " unicamente esta ejecutando un soft-AP.");
 			setStatus("No se estan registrando paquetes.");
@@ -242,12 +242,12 @@ public class Card {
 	
 	// Verifica si el packet corresponde a un AP
 	private boolean isAP(Packet packet) {
-		return (aps.containsKey(packet.origen) || Arrays.asList(AP.TYPES).contains(packet.type));
+		return (aps.containsKey(packet.source) || Arrays.asList(AP.TYPES).contains(packet.type));
 	}
 	
 	// Verifica si el packet corresponde a un Cliente
 	private boolean isClient(Packet packet) {
-		return (clients.containsKey(packet.origen) || Arrays.asList(Client.TYPES).contains(packet.type));
+		return (clients.containsKey(packet.source) || Arrays.asList(Client.TYPES).contains(packet.type));
 	}
 	
 	// Si corresponde, envia el packet al servidor
@@ -257,33 +257,33 @@ public class Card {
 	
 	// Procesa el packet en caso de que sea de un AP
 	private void processAP(Packet packet) {
-		DispositivoABS ap = aps.get(packet.origen);
+		DispositivoABS ap = aps.get(packet.source);
 		// Si ya estaba registrado actualizo
 		if (ap != null) 
 			ap.update(packet);
 		// Sino, lo agrego
 		else {
 			ap = new AP(packet);
-			aps.put(packet.origen, ap);
+			aps.put(packet.source, ap);
 		}
 		// Si se cumplen las condiciones, enviar
-		if (ap.needUpdate(config.delaymac) && config.sendap)
+		if (ap.needUpdate(config.delayMac) && config.sendAP)
 			sendPacket(packet);
 	}
 	
 	// Procesa el packet en caso de que sea de un Cliente
 	private void processClient(Packet packet) {
-		DispositivoABS client = clients.get(packet.origen);
+		DispositivoABS client = clients.get(packet.source);
 		// Si ya estaba registrado actualizo
 		if (client != null) 
 			client.update(packet);
 		// Sino, lo agrego
 		else {
 			client = new Client(packet);
-			clients.put(packet.origen, client);
+			clients.put(packet.source, client);
 		}
 		// Si se cumplen las condiciones, enviar
-		if ( client.needUpdate(config.delaymac) && (packet.type.equals(Packet.PROBEREQ) || config.sendall))
+		if ( client.needUpdate(config.delayMac) && (packet.type.equals(Packet.PROBEREQ) || config.sendAll))
 			sendPacket(packet);
 	}
 	
