@@ -4,10 +4,6 @@ import java.util.Date;
 
 public abstract class DispositivoABS {
 	
-	// Statics
-	public static String TITLE;
-	public static String[] TYPES;
-	
 	// Variables propias de un dispositivo
 	protected int power;
 	protected int packets;

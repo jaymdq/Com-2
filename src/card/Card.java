@@ -27,7 +27,8 @@ public class Card {
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
-	private static Vector<String> allowedtypes = new Vector<String>();;
+	private Vector<String> allowedchannels;
+	private static Vector<String> allowedtypes = new Vector<String>();
 	
 	// Agreaga un tipo aceptado por el programa
 	public static void addTypes(String type) {
@@ -50,6 +51,28 @@ public class Card {
 		clients = new HashMap<String,DispositivoABS>();
 		remover = new Remover(aps,clients);
 		listener = new Listener(this);
+		readChannels();
+	}
+
+	private void readChannels() {
+		allowedchannels = new Vector<String>();
+		String command[] = {"bash","./scripts/get_channels.sh",card};
+		int idtask = taskManager.start(command,null);
+		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
+		BufferedReader buff = new BufferedReader(inreader);
+		String line = null;
+		try {
+			while ( (line=buff.readLine()) != null) {
+				if (line.startsWith("0"))
+					line = line.substring(1);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String[] channels = line.split(" ");
+		for (int i = 0; i < channels.length; i++) {
+			allowedchannels.add(channels[i]);
+		}
 	}
 
 	// Start
@@ -275,4 +298,11 @@ public class Card {
 		}
 	}
 
+	public Vector<String> getAllowedchannels() {
+		return allowedchannels;
+	}
+
+	public void setAllowedchannels(Vector<String> allowedchannels) {
+		this.allowedchannels = allowedchannels;
+	}
 }

@@ -1,9 +1,12 @@
 package gui;
 
+import java.awt.Color;
+
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 
 import card.Card;
+import parser.Parser;
 
 public class Updater implements Runnable {
 
@@ -29,6 +32,10 @@ public class Updater implements Runnable {
 			consola.setText(card.toString());
 			serverstatus.setText(card.getConfig().serverstatus);
 			lastupdate.setText(card.getConfig().lastsend);
+			if (card.getConfig().serverstatus.equals(Parser.ONLINE))
+				serverstatus.setForeground(Color.GREEN);
+			else
+				serverstatus.setForeground(Color.RED);
 		}
 	}
 	

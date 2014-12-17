@@ -12,6 +12,8 @@ public class Parser implements Runnable{
 
 	private static final SimpleDateFormat sdftoserver = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",new Locale("en_US"));
 	private static final SimpleDateFormat sdftointerface = new SimpleDateFormat("HH:mm:ss");
+	public static final String ONLINE = "Online";
+	public static final String OFFLINE = "Online";
 
 	private Vector<Packet> tosend;
 	private Config config;
@@ -66,10 +68,10 @@ public class Parser implements Runnable{
 					//Se manda lo obtenido
 					String resultado =  EnviaDatos.getInstancia().enviarDatos(toinsert,config.serverip);
 					if (resultado.toLowerCase().contains("ok")) {
-						config.serverstatus = "Online";
+						config.serverstatus = ONLINE;
 						tosend.clear();
 					}else{
-						config.serverstatus = "Offline";
+						config.serverstatus = OFFLINE;
 					}
 					config.lastsend = sdftointerface.format(new Date()).toString();
 				}
