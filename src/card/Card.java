@@ -13,39 +13,39 @@ import taskmanager.taskManager;
 public class Card {
 	
 	private String card;
-	private int idchannels;
-	private int idtshark;
-	private int idap;
+	private int idChannels;
+	private int idTshark;
+	private int idAP;
 	private boolean active;
 	private Config config;
-	private Thread listenerthread;
-	private Thread removerthread;
-	private Thread parserthread;
+	private Thread listenerThread;
+	private Thread removerThread;
+	private Thread parserThread;
 	private Remover remover;
 	private Listener listener;
 	private Parser parser;
 	private String status;
 	private HashMap<String, DispositivoABS> aps;
 	private HashMap<String, DispositivoABS> clients;
-	private Vector<String> allowedchannels;
-	private static Vector<String> allowedtypes = new Vector<String>();
+	private Vector<String> allowedChannels;
+	private static Vector<String> allowedTypes = new Vector<String>();
 	
 	// Agreaga un tipo aceptado por el programa
 	public static void addTypes(String type) {
-		if (!allowedtypes.contains(type))
-			allowedtypes.add(type);
+		if (!allowedTypes.contains(type))
+			allowedTypes.add(type);
 	}
 	
 	// Create a new card
 	public Card(String card) {
 		this.card = card;
-		idchannels = 0;
-		idtshark = 0;
-		idap = 0;
+		idChannels = 0;
+		idTshark = 0;
+		idAP = 0;
 		setStatus("");
 		config = new Config();
-		listenerthread = null;
-		removerthread = null;
+		listenerThread = null;
+		removerThread = null;
 		active = false;
 		aps = new HashMap<String,DispositivoABS>();
 		clients = new HashMap<String,DispositivoABS>();
@@ -55,7 +55,7 @@ public class Card {
 	}
 
 	private void readChannels() {
-		allowedchannels = new Vector<String>();
+		allowedChannels = new Vector<String>();
 		String command[] = {"bash","./scripts/get_channels.sh",card};
 		int idtask = taskManager.start(command,null);
 		InputStreamReader inreader = new InputStreamReader(taskManager.getInputStream(idtask));
@@ -65,13 +65,10 @@ public class Card {
 			while ( (line=buff.readLine()) != null) {
 				if (line.startsWith("0"))
 					line = line.substring(1);
+				allowedChannels.add(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		String[] channels = line.split(" ");
-		for (int i = 0; i < channels.length; i++) {
-			allowedchannels.add(channels[i]);
 		}
 	}
 
@@ -79,9 +76,10 @@ public class Card {
 	public synchronized void start() {
 		if (!active) {
 			setStatus("");
-			if (toMonitor()) {					
-				startTshark();
-				if (config.fakeap)
+			if (toMonitor()) {
+				if (!config.onlyap)
+					startTshark();
+				if (config.onlyap || config.fakeap)
 					startFakeAP();
 				active = true;
 			}
@@ -93,8 +91,9 @@ public class Card {
 		if (active) {
 			active = false;
 			setStatus("");
-			stopTshark();
-			if (config.fakeap)
+			if (!config.onlyap)
+				stopTshark();
+			if (config.onlyap || config.fakeap)
 				stopFakeAP();
 			toManaged();	
 			aps.clear();
@@ -126,51 +125,62 @@ public class Card {
 		// Comando para ejecutar tshark
 		String commandtshark[] = {"bash","./scripts/tshark.sh", card};
 		// Comando para cambiar de canales		
-		String channelsiteration = "";
+		String channelsList = "";
 		for (String channel : config.channels)
-			channelsiteration += channel + " ";
-		String commandchannels[] = {"bash","./scripts/change_channels.sh", card, channelsiteration};
+			channelsList += channel + " ";
+		String commandchannels[] = {"bash","./scripts/change_channels.sh", card, channelsList};
 		// Lanzo a ejecutar tshark
-		idtshark = taskManager.start(commandtshark,null);
+		idTshark = taskManager.start(commandtshark,null);
 		// Lanzo a ejecutar el cambio de canales
-		idchannels = taskManager.start(commandchannels, null);
+		idChannels = taskManager.start(commandchannels, null);
 		// Thread escucha de tshark
-		listener.setInputStream(taskManager.getInputStream(idtshark));
-		listenerthread = new Thread(listener);
-		listenerthread.start();
+		listener.setInputStream(taskManager.getInputStream(idTshark));
+		listenerThread = new Thread(listener);
+		listenerThread.start();
 		// Thread removedor
-		removerthread = new Thread(remover);
-		removerthread.start();
+		removerThread = new Thread(remover);
+		removerThread.start();
+		remover.start();
 		// Thread parser para enviar info al servidor
 		parser = new Parser(config);
-		parserthread = new Thread(parser);
-		parserthread.start();
+		parser.start();
+		parserThread = new Thread(parser);
+		parserThread.start();
 	}
 	
 	private void startFakeAP() {
 		String command[] = {"bash","./scripts/fake_ap.sh", card};
-		idap = taskManager.start(command, null);
+		idAP = taskManager.start(command, null);
+		if (config.onlyap) {
+			setStatus("");
+			setStatus("La tarjeta " + card + " unicamente esta ejecutando un soft-AP.");
+			setStatus("No se estan registrando paquetes.");
+		}
 	}
 	
 	private void stopFakeAP() {
-		taskManager.stop(idap);
-		idap = 0;
+		taskManager.stop(idAP);
+		idAP = 0;
 	}
 	
 	private void stopTshark() {
-		taskManager.stop(idchannels);
-		taskManager.stop(idtshark);
-		if (listenerthread != null) {
-			listenerthread.interrupt();
-			listenerthread = null;
+		taskManager.stop(idChannels);
+		taskManager.stop(idTshark);
+		idChannels = 0;
+		idTshark = 0;
+		if (listenerThread != null) {
+			listenerThread.interrupt();
+			listenerThread = null;
 		}
-		if (removerthread != null) {
-			removerthread.interrupt();
-			removerthread = null;
+		if (removerThread != null) {
+			remover.stop();
+			removerThread.interrupt();
+			removerThread = null;
 		}
-		if (parserthread != null) {
-			parserthread.interrupt();
-			parserthread = null;
+		if (parserThread != null) {
+			parser.stop();
+			parserThread.interrupt();
+			parserThread = null;
 		}
 	}
 	
@@ -196,7 +206,7 @@ public class Card {
 		// String a retornar
 		String toreturn = new String();
 		// Si la tarjeta esta inactiva se devuelve el mensaje de status
-		if (!active)
+		if (idTshark == 0)
 			toreturn = status;
 		// Si la tarjeta esta activa se devuelven los dispositivos
 		else {
@@ -220,7 +230,7 @@ public class Card {
 		// Creo el packet a partir del string
 		Packet packet = new Packet(parseado);
 		// Si es un packet permitido
-		if (allowedtypes.contains(packet.type)) {
+		if (allowedTypes.contains(packet.type)) {
 			// Si corresponde a un AP
 			if (isAP(packet))
 				processAP(packet);
@@ -299,10 +309,10 @@ public class Card {
 	}
 
 	public Vector<String> getAllowedchannels() {
-		return allowedchannels;
+		return allowedChannels;
 	}
 
-	public void setAllowedchannels(Vector<String> allowedchannels) {
-		this.allowedchannels = allowedchannels;
+	public void setAllowedchannels(Vector<String> allowedChannels) {
+		this.allowedChannels = allowedChannels;
 	}
 }

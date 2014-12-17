@@ -12,8 +12,9 @@ public class Parser implements Runnable{
 
 	private static final SimpleDateFormat sdftoserver = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS",new Locale("en_US"));
 	private static final SimpleDateFormat sdftointerface = new SimpleDateFormat("HH:mm:ss");
+	private boolean active;
 	public static final String ONLINE = "Online";
-	public static final String OFFLINE = "Online";
+	public static final String OFFLINE = "Offline";
 
 	private Vector<Packet> tosend;
 	private Config config;
@@ -21,6 +22,7 @@ public class Parser implements Runnable{
 	public Parser(Config config){
 		this.tosend = new Vector<Packet>();
 		this.config = config;
+		active = false;
 	}
 
 	public void addPacket(Packet packet){
@@ -28,7 +30,14 @@ public class Parser implements Runnable{
 			tosend.add(packet);
 		}
 	}
-
+	
+	public void start() {
+		active = true;
+	}
+	
+	public void stop() {
+		active = false;
+	}
 	// Convierte un paquete en una linea de string para enviar al servidor				
 	private String toLine(Packet paquete){
 		String salida = "";
@@ -38,8 +47,8 @@ public class Parser implements Runnable{
 		salida += paquete.destino.replaceAll(":", "").toUpperCase() + "|" ;
 		salida += paquete.power + "|";
 		salida += paquete.getName() + "|";
-		salida += "DISPOSITIVO" + "|";		//TODO tendria que averiguarse a traves de la MAC
-		salida += "W" + "|";
+		salida += "DISPOSITIVO" + "|";		//TODO brian: tendria que averiguarse a traves de la MAC 
+		salida += "W" + "|";				// viru: la marca, pero como haces para sacar el SO? eso habria que hacerlo con alguan otra herramienta media chitera
 		if ( paquete.essid.equals("") )
 			salida += "BROADCAST";
 		else
@@ -50,7 +59,7 @@ public class Parser implements Runnable{
 	@Override
 	public void run() {
 		
-		while (true){
+		while (active){
 
 			try {
 				Thread.sleep(config.delaysend);

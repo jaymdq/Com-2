@@ -7,10 +7,12 @@ public class Remover implements Runnable {
 
 	private HashMap<String,DispositivoABS> aps;
 	private HashMap<String,DispositivoABS> clients;
+	private boolean active;
 	
 	public Remover(HashMap<String,DispositivoABS> aps, HashMap<String,DispositivoABS> clients) {
 		this.aps = aps;
 		this.clients = clients;
+		active = false;
 	}
 	
 	private void deleteObsolete(HashMap<String,DispositivoABS> mapa) {
@@ -25,18 +27,26 @@ public class Remover implements Runnable {
 				mapa.remove(key);
 		}
 	}
+	
+	public void start() {
+		active = true;
+	}
+	
+	public void stop() {
+		active = false;
+	}
+	
 	@Override
 	public void run() {
-		while (true) {
+		while (active) {
 			try {
 				Thread.sleep(4000);
 				deleteObsolete(aps);
 				deleteObsolete(clients);
 			}
-			catch (Exception e) {}
+			catch (Exception e) {
+			}
 		}
-		// TODO Auto-generated method stub
-
 	}
 
 }

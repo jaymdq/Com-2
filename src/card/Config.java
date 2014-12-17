@@ -7,6 +7,7 @@ public class Config {
 	public boolean sendap;
 	public boolean sendall;
 	public boolean fakeap;
+	public boolean onlyap;
 	public int delaymac;
 	public int delaysend;
 	public String serverip;
@@ -19,6 +20,7 @@ public class Config {
 		sendap = false;
 		sendall = false;
 		fakeap = false;
+		onlyap = false;
 		delaymac = 0;
 		delaysend = 0;
 		serverip = "190.19.175.174";

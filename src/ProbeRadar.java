@@ -106,7 +106,7 @@ public class ProbeRadar {
 
 	// Inicializa la ventana
 	private ProbeRadar() {
-		// loadTypes();
+		loadTypes();
 		initialize();
 	}
 
@@ -134,10 +134,10 @@ public class ProbeRadar {
 		principalPanel.setLayout(new FormLayout(
 			new ColumnSpec[] {
 				ColumnSpec.decode("5px"), ColumnSpec.decode("25px"),
-				ColumnSpec.decode("35px"), ColumnSpec.decode("295px"),	
-				ColumnSpec.decode("55px"),	ColumnSpec.decode("20px"),
-				ColumnSpec.decode("155px"), ColumnSpec.decode("15px"),
-				ColumnSpec.decode("145px"),	ColumnSpec.decode("55px"),
+				ColumnSpec.decode("35px"), ColumnSpec.decode("275px"),	
+				ColumnSpec.decode("75px"),	ColumnSpec.decode("20px"),
+				ColumnSpec.decode("185px"), ColumnSpec.decode("15px"),
+				ColumnSpec.decode("115px"),	ColumnSpec.decode("55px"),
 				ColumnSpec.decode("default:grow"), ColumnSpec.decode("15px"),
 				ColumnSpec.decode("165px"), ColumnSpec.decode("25px"),
 				ColumnSpec.decode("5px"),
@@ -165,10 +165,10 @@ public class ProbeRadar {
 		// Obtengo todas las tarjetas disponibles
 		availableCards = new HashMap<String, Card>();
 
-		/*for (String cardname: getCards()){ 
+		for (String cardname: getCards()){ 
 			Card card = new Card(cardname);
 			availableCards.put(cardname, card); 
-		 }*/
+		}
 
 		// Lista de tarjetas disponibles
 		cardList = new JComboBox<Object>();
@@ -206,7 +206,7 @@ public class ProbeRadar {
 		// Creo label de canales
 		JLabel lblChannels = new JLabel("Canales disponibles");
 		lblChannels.setFont(new Font("Dialog", Font.BOLD, 16));
-		principalPanel.add(lblChannels, "7, 2, 3, 1, center, center");
+		principalPanel.add(lblChannels, "7, 2, 4, 1, center, center");
 
 		// Lista de canales
 		channelsPanel = new JPanel();
@@ -336,7 +336,8 @@ public class ProbeRadar {
 		chkBoxOnlyAP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
-					selected.getConfig().fakeap = chkBoxOnlyAP.isSelected();
+					selected.getConfig().onlyap = chkBoxOnlyAP.isSelected();
+				setMonitorEnabled(!chkBoxOnlyAP.isSelected());
 			}
 		});
 		
@@ -471,7 +472,6 @@ public class ProbeRadar {
 
 	private void clickChannelButton(JToggleButton button) {
 		if (!button.isSelected()) {
-			//TODO borrar
 			if (selected != null)
 				selected.getConfig().channels.remove(button.getText());
 			allChannelsBtn.setSelected(false);
@@ -488,8 +488,10 @@ public class ProbeRadar {
 
 	private void clickAllChannelsButton(boolean value) {
 		for (Component c : channelsPanel.getComponents()) {
-			JToggleButton btn = (JToggleButton) c;
-			btn.setSelected(value);
+			if (c.isEnabled()) {
+				JToggleButton btn = (JToggleButton) c;
+				btn.setSelected(value);
+			}
 		}
 		btnStartStop.setEnabled(value && validIP(txtServerIP.getText()));
 	}
@@ -506,6 +508,10 @@ public class ProbeRadar {
 	}
 
 	private void checkCanPlay() {
+		if (chkBoxOnlyAP.isSelected()) {
+			btnStartStop.setEnabled(true);
+			return;
+		}
 		if (validIP(txtServerIP.getText())) {
 			for (Component c : channelsPanel.getComponents()) {
 				JToggleButton btn = (JToggleButton) c;
@@ -551,7 +557,7 @@ public class ProbeRadar {
 		else
 			btnStartStop.setIcon(new ImageIcon(ProbeRadar.class
 					.getResource("/images/play.png")));
-		setEnabled(!active);
+		setAllEnabled(!active);
 	}
 
 	// Cuando se selecciona otra tarjeta se carga su configuración
@@ -563,6 +569,7 @@ public class ProbeRadar {
 			chkBoxAP.setSelected(config.sendap);
 			chkBoxAll.setSelected(config.sendall);
 			chkBoxFakeAP.setSelected(config.fakeap);
+			chkBoxOnlyAP.setSelected(config.onlyap);
 			delayPacket.setValue(config.delaymac / 1000);
 			delaySend.setValue(config.delaysend / 1000);
 			txtServerIP.setText(config.serverip);
@@ -571,9 +578,12 @@ public class ProbeRadar {
 			updater.setCard(selected);
 			for (Component c : channelsPanel.getComponents()) {
 				JToggleButton btn = (JToggleButton) c;
+				btn.setEnabled(btn.getText().equals("Todos") || selected.getAllowedchannels().contains(btn.getText()));
 				btn.setSelected(selected.getConfig().channels.contains(btn.getText()));
 			}
 			checkAllButton();
+			if (config.onlyap)
+				setMonitorEnabled(!config.onlyap);
 			checkCanPlay();
 		}
 	}
@@ -621,11 +631,29 @@ public class ProbeRadar {
 			return false;
 		}
 	}
-
-	private void setEnabled(boolean value) {
+	
+	private void setMonitorEnabled(boolean value) {
 		chkBoxAP.setEnabled(value);
 		chkBoxAll.setEnabled(value);
 		chkBoxFakeAP.setEnabled(value);
+		delayPacket.setEnabled(value);
+		delaySend.setEnabled(value);
+		txtServerIP.setEnabled(value);
+		idScanner.setEnabled(value);
+		lbldelayPacket.setEnabled(value);
+		lblServerIp.setEnabled(value);
+		lbldelaySend.setEnabled(value);
+		lblIdscanner.setEnabled(value);
+		allChannelsBtn.setEnabled(value);
+		for (Component c : channelsPanel.getComponents())
+			c.setEnabled(value);
+	}
+	
+	private void setAllEnabled(boolean value) {
+		chkBoxAP.setEnabled(value);
+		chkBoxAll.setEnabled(value);
+		chkBoxFakeAP.setEnabled(value);
+		chkBoxOnlyAP.setEnabled(value);
 		delayPacket.setEnabled(value);
 		delaySend.setEnabled(value);
 		txtServerIP.setEnabled(value);
