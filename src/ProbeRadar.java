@@ -344,7 +344,7 @@ public class ProbeRadar {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null)
 					selected.getConfig().onlyAP = chkBoxOnlyAP.isSelected();
-				setMonitorEnabled(!chkBoxOnlyAP.isSelected());
+				setMonitorEnabled(chkBoxOnlyAP.isSelected());
 			}
 		});
 		
@@ -515,10 +515,6 @@ public class ProbeRadar {
 	}
 
 	private void checkCanPlay() {
-		if (chkBoxOnlyAP.isSelected()) {
-			btnStartStop.setEnabled(true);
-			return;
-		}
 		if (validIP(txtServerIP.getText())) {
 			for (Component c : channelsPanel.getComponents()) {
 				JToggleButton btn = (JToggleButton) c;
@@ -564,7 +560,10 @@ public class ProbeRadar {
 		else
 			btnStartStop.setIcon(new ImageIcon(ProbeRadar.class
 					.getResource("/images/play.png")));
-		setAllEnabled(!active);
+		if (chkBoxOnlyAP.isSelected())
+			setMonitorEnabled(true);
+		else
+			setAllEnabled(!active);
 	}
 
 	// Cuando se selecciona otra tarjeta se carga su configuración
@@ -590,8 +589,9 @@ public class ProbeRadar {
 			}
 			checkAllButton();
 			if (config.onlyAP)
-				setMonitorEnabled(!config.onlyAP);
-			checkCanPlay();
+				setMonitorEnabled(true);
+			else
+				checkCanPlay();
 		}
 	}
 
@@ -639,7 +639,8 @@ public class ProbeRadar {
 		}
 	}
 	
-	private void setMonitorEnabled(boolean value) {
+	private void setMonitorEnabled(boolean enabled) {
+		boolean value = !enabled;
 		chkBoxAP.setEnabled(value);
 		chkBoxAll.setEnabled(value);
 		chkBoxFakeAP.setEnabled(value);
@@ -660,7 +661,10 @@ public class ProbeRadar {
 			JToggleButton btn = (JToggleButton) c;
 			btn.setEnabled(value && (btn.getText().equals("Todos") || selected.getAllowedchannels().contains(btn.getText())));
 		}
-		
+		if (enabled)
+			btnStartStop.setEnabled(enabled);
+		else
+			checkCanPlay();
 	}
 	
 	private void setAllEnabled(boolean value) {
@@ -677,8 +681,10 @@ public class ProbeRadar {
 		lbldelaySend.setEnabled(value);
 		lblIdscanner.setEnabled(value);
 		allChannelsBtn.setEnabled(value);
-		for (Component c : channelsPanel.getComponents())
-			c.setEnabled(value);
+		for (Component c : channelsPanel.getComponents()) {
+			JToggleButton btn = (JToggleButton) c;
+			btn.setEnabled(value && (btn.getText().equals("Todos") || selected.getAllowedchannels().contains(btn.getText())));
+		}
 	}
 
 }
