@@ -1,0 +1,1 @@
+sudo ./scripts/airbase-ng -P --essid "Free WiFi" $1

@@ -14,6 +14,9 @@ import javax.swing.JPanel;
 import card.Card;
 import card.Config;
 
+import com.alee.laf.WebLookAndFeel;
+import com.alee.managers.language.LanguageConstants;
+import com.alee.managers.language.LanguageManager;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -25,13 +28,16 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JSeparator;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
@@ -87,18 +93,18 @@ public class ProbeRadar {
 	private JPanel panelCanales;
 	private JCheckBox cnTodos;
 	private JPanel panelTodosCanales;
-	private JCheckBox cn1;
-	private JCheckBox cn8;
-	private JCheckBox cn9;
-	private JCheckBox cn10;
-	private JCheckBox cn11;
-	private JCheckBox cn12;
-	private JCheckBox cn13;
-	private JCheckBox cn7;
-	private JCheckBox cn6;
-	private JCheckBox cn5;
-	private JCheckBox cn4;
-	private JCheckBox cn3;
+	private JToggleButton cn1;
+	private JToggleButton cn8;
+	private JToggleButton cn9;
+	private JToggleButton cn10;
+	private JToggleButton cn11;
+	private JToggleButton cn12;
+	private JToggleButton cn13;
+	private JToggleButton cn7;
+	private JToggleButton cn6;
+	private JToggleButton cn5;
+	private JToggleButton cn4;
+	private JToggleButton cn3;
 	private AbstractButton cn2;
 	/**
 	 * Launch the application.
@@ -194,130 +200,113 @@ public class ProbeRadar {
 		panelCanales = new JPanel();
 		panePrincipal.add(panelCanales, "6, 4, 5, 3, fill, fill");
 		panelCanales.setLayout(new BorderLayout(0, 0));
-
 		cnTodos = new JCheckBox("Todos los canales");
 		cnTodos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				cambiarTodosLosCanales();
-			}
+		public void actionPerformed(ActionEvent arg0) {
+		cambiarTodosLosCanales();
+		}
 		});
 		cnTodos.setSelected(true);
 		cnTodos.setFont(new Font("Dialog", Font.BOLD, 16));
 		panelCanales.add(cnTodos, BorderLayout.NORTH);
-
 		panelTodosCanales = new JPanel();
 		panelCanales.add(panelTodosCanales, BorderLayout.CENTER);
-
 		ActionListener actLis = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				chequearTodosLosCanales();
-			}
+		public void actionPerformed(ActionEvent e) {
+		chequearTodosLosCanales();
+		}
 		};
-		
 		cn1 = new JCheckBox("1");
 		cn1.addActionListener(actLis);
 		cn1.setSelected(true);
-
 		cn2 = new JCheckBox("2");
 		cn2.addActionListener(actLis);
 		cn2.setSelected(true);
-
 		cn3 = new JCheckBox("3");
 		cn3.addActionListener(actLis);
 		cn3.setSelected(true);
-
 		cn4 = new JCheckBox("4");
 		cn4.addActionListener(actLis);
 		cn4.setSelected(true);
-
 		cn5 = new JCheckBox("5");
 		cn5.addActionListener(actLis);
 		cn5.setSelected(true);
-
 		cn6 = new JCheckBox("6");
 		cn6.addActionListener(actLis);
 		cn6.setSelected(true);
-
 		cn7 = new JCheckBox("7");
 		cn7.addActionListener(actLis);
 		cn7.setSelected(true);
-
 		cn8 = new JCheckBox("8");
 		cn8.addActionListener(actLis);
 		cn8.setSelected(true);
-
 		cn9 = new JCheckBox("9");
-		cn9.addActionListener(actLis);	
+		cn9.addActionListener(actLis);
 		cn9.setSelected(true);
-
 		cn10 = new JCheckBox("10");
 		cn10.addActionListener(actLis);
 		cn10.setSelected(true);
-
 		cn11 = new JCheckBox("11");
 		cn11.addActionListener(actLis);
 		cn11.setSelected(true);
-
 		cn12 = new JCheckBox("12");
 		cn12.addActionListener(actLis);
 		cn12.setSelected(true);
-
 		cn13 = new JCheckBox("13");
 		cn13.addActionListener(actLis);
 		cn13.setSelected(true);
 		GroupLayout gl_panelTodosCanales = new GroupLayout(panelTodosCanales);
 		gl_panelTodosCanales.setHorizontalGroup(
-				gl_panelTodosCanales.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelTodosCanales.createSequentialGroup()
-						.addComponent(cn1)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(cn2)
-						.addGap(8)
-						.addComponent(cn3)
-						.addGap(8)
-						.addComponent(cn4)
-						.addGap(8)
-						.addComponent(cn5)
-						.addGap(8)
-						.addComponent(cn6)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(cn7)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(cn8)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(cn9)
-						.addGap(4)
-						.addComponent(cn10)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(cn11)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(cn12)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(cn13)
-						.addContainerGap(42, Short.MAX_VALUE))
-				);
+		gl_panelTodosCanales.createParallelGroup(Alignment.LEADING)
+		.addGroup(gl_panelTodosCanales.createSequentialGroup()
+		.addComponent(cn1)
+		.addPreferredGap(ComponentPlacement.UNRELATED)
+		.addComponent(cn2)
+		.addGap(8)
+		.addComponent(cn3)
+		.addGap(8)
+		.addComponent(cn4)
+		.addGap(8)
+		.addComponent(cn5)
+		.addGap(8)
+		.addComponent(cn6)
+		.addPreferredGap(ComponentPlacement.UNRELATED)
+		.addComponent(cn7)
+		.addPreferredGap(ComponentPlacement.UNRELATED)
+		.addComponent(cn8)
+		.addPreferredGap(ComponentPlacement.UNRELATED)
+		.addComponent(cn9)
+		.addGap(4)
+		.addComponent(cn10)
+		.addPreferredGap(ComponentPlacement.UNRELATED)
+		.addComponent(cn11)
+		.addPreferredGap(ComponentPlacement.RELATED)
+		.addComponent(cn12)
+		.addPreferredGap(ComponentPlacement.UNRELATED)
+		.addComponent(cn13)
+		.addContainerGap(42, Short.MAX_VALUE))
+		);
 		gl_panelTodosCanales.setVerticalGroup(
-				gl_panelTodosCanales.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panelTodosCanales.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(gl_panelTodosCanales.createParallelGroup(Alignment.BASELINE)
-								.addComponent(cn1)
-								.addComponent(cn2)
-								.addComponent(cn3)
-								.addComponent(cn4)
-								.addComponent(cn5)
-								.addComponent(cn6)
-								.addComponent(cn7)
-								.addComponent(cn8)
-								.addComponent(cn9)
-								.addComponent(cn10)
-								.addComponent(cn11)
-								.addComponent(cn12)
-								.addComponent(cn13))
-								.addContainerGap(27, Short.MAX_VALUE))
-				);
+		gl_panelTodosCanales.createParallelGroup(Alignment.LEADING)
+		.addGroup(gl_panelTodosCanales.createSequentialGroup()
+		.addContainerGap()
+		.addGroup(gl_panelTodosCanales.createParallelGroup(Alignment.BASELINE)
+		.addComponent(cn1)
+		.addComponent(cn2)
+		.addComponent(cn3)
+		.addComponent(cn4)
+		.addComponent(cn5)
+		.addComponent(cn6)
+		.addComponent(cn7)
+		.addComponent(cn8)
+		.addComponent(cn9)
+		.addComponent(cn10)
+		.addComponent(cn11)
+		.addComponent(cn12)
+		.addComponent(cn13))
+		.addContainerGap(27, Short.MAX_VALUE))
+		);
 		panelTodosCanales.setLayout(gl_panelTodosCanales);
-
 		JScrollPane scrollPane = new JScrollPane();
 		panePrincipal.add(scrollPane, "2, 28, 12, 1, fill, fill");
 
@@ -583,8 +572,10 @@ public class ProbeRadar {
 	
 	private void habilitarTodosLosCanales(boolean valor){
 		for (Component c : panelTodosCanales.getComponents()){
-			JCheckBox cn = (JCheckBox) c;
-			cn.setEnabled( valor );
+			if (c instanceof JCheckBox) {
+				JCheckBox cn = (JCheckBox) c;
+				cn.setEnabled( valor );
+			}
 		}
 	}
 	
@@ -647,8 +638,10 @@ public class ProbeRadar {
 			setPlayBtn(selected.isActive());
 			updater.setCard(selected);
 			for (Component c : panelTodosCanales.getComponents()){
-				JCheckBox cn = (JCheckBox) c;
-				cn.setSelected(false);
+				if (c instanceof JCheckBox) {
+					JCheckBox cn = (JCheckBox) c;
+					cn.setSelected(false);
+				}
 			}
 			cnTodos.setSelected(false);
 			for (String canal : config.channels){

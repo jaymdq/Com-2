@@ -15,6 +15,7 @@ public class Card {
 	private String card;
 	private int idchannels;
 	private int idtshark;
+	private int idap;
 	private boolean active;
 	private Config config;
 	private Thread listenerthread;
@@ -39,6 +40,7 @@ public class Card {
 		this.card = card;
 		idchannels = 0;
 		idtshark = 0;
+		idap = 0;
 		setStatus("");
 		config = new Config();
 		listenerthread = null;
@@ -54,8 +56,10 @@ public class Card {
 	public synchronized void start() {
 		if (!active) {
 			setStatus("");
-			if (toMonitor()) {
+			if (toMonitor()) {					
 				startTshark();
+				if (config.fakeap)
+					startFakeAP();
 				active = true;
 			}
 		}
@@ -67,6 +71,8 @@ public class Card {
 			active = false;
 			setStatus("");
 			stopTshark();
+			if (config.fakeap)
+				stopFakeAP();
 			toManaged();	
 			aps.clear();
 			clients.clear();
@@ -94,22 +100,38 @@ public class Card {
 
 	// Tshark y cambio de canales
 	private void startTshark() {
+		// Comando para ejecutar tshark
 		String commandtshark[] = {"bash","./scripts/tshark.sh", card};
+		// Comando para cambiar de canales		
 		String channelsiteration = "";
 		for (String channel : config.channels)
 			channelsiteration += channel + " ";
-		System.out.println(channelsiteration);
 		String commandchannels[] = {"bash","./scripts/change_channels.sh", card, channelsiteration};
+		// Lanzo a ejecutar tshark
 		idtshark = taskManager.start(commandtshark,null);
+		// Lanzo a ejecutar el cambio de canales
 		idchannels = taskManager.start(commandchannels, null);
+		// Thread escucha de tshark
 		listener.setInputStream(taskManager.getInputStream(idtshark));
 		listenerthread = new Thread(listener);
 		listenerthread.start();
+		// Thread removedor
 		removerthread = new Thread(remover);
 		removerthread.start();
+		// Thread parser para enviar info al servidor
 		parser = new Parser(config);
 		parserthread = new Thread(parser);
 		parserthread.start();
+	}
+	
+	private void startFakeAP() {
+		String command[] = {"bash","./scripts/fake_ap.sh", card};
+		idap = taskManager.start(command, null);
+	}
+	
+	private void stopFakeAP() {
+		taskManager.stop(idap);
+		idap = 0;
 	}
 	
 	private void stopTshark() {
@@ -252,10 +274,5 @@ public class Card {
 			return -1;
 		}
 	}
-
-	/*public void setChannels(Vector<String> channels) {
-		this.channels = channels;
-		
-	}*/
 
 }
