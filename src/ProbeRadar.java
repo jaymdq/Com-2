@@ -65,6 +65,7 @@ public class ProbeRadar {
 
 	private JFrame frame;
 	private JButton btnStartStop;
+	private JButton btnRefresh;
 	private JComboBox<Object> cardList;
 	private HashMap<String, Card> availableCards;
 	private Card selected;
@@ -74,16 +75,18 @@ public class ProbeRadar {
 	private JCheckBox chkBoxOnlyAP;
 	private JSpinner delayPacket;
 	private JSpinner delaySend;
-	private JTextField txtServerIP;
 	private JSpinner idScanner;
+	private Updater updater;
+	private JTextField txtServerIP;
 	private JLabel txtServerStatus;
 	private JLabel txtLastUpdate;
-	private Updater updater;
 	private JLabel lbldelayPacket;
 	private JLabel lblServerIp;
 	private JLabel lbldelaySend;
 	private JLabel lblIdscanner;
 	private JPanel channelsPanel;
+	private JLabel lblServerStatus;
+	private JLabel lblLastUpdate;
 	private JToggleButton allChannelsBtn;
 	
 	/**
@@ -93,8 +96,8 @@ public class ProbeRadar {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//LanguageManager.setDefaultLanguage(LanguageConstants.SPANISH);
-					//WebLookAndFeel.install();
+					LanguageManager.setDefaultLanguage(LanguageConstants.SPANISH);
+					WebLookAndFeel.install();
 					ProbeRadar window = new ProbeRadar();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -183,13 +186,14 @@ public class ProbeRadar {
 		});
 
 		// Creo boton de actualizar tarjetas
-		JButton btnRefresh = new JButton("");
+		btnRefresh = new JButton("");
 		btnRefresh.setIcon(new ImageIcon(ProbeRadar.class.getResource("/images/refresh.png")));
 		btnRefresh.setBorder(BorderFactory.createEmptyBorder());
 		btnRefresh.setContentAreaFilled(false);
 		principalPanel.add(btnRefresh, "2, 4, 2, 1, center, center");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				btnRefresh.setEnabled(false);
 				Vector<String> cards = getCards();
 				Set<String> available = availableCards.keySet();
 				available.retainAll(cards);
@@ -200,6 +204,7 @@ public class ProbeRadar {
 				}
 				cardList.setModel(new DefaultComboBoxModel<Object>(availableCards.keySet().toArray()));
 				selected = availableCards.get(cardList.getSelectedItem().toString());
+				btnRefresh.setEnabled(true);
 			}
 		});
 
@@ -264,12 +269,14 @@ public class ProbeRadar {
 		btnStartStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (selected != null) {
+					btnStartStop.setEnabled(false);
 					if (selected.isActive())
 						selected.stop();
 					else
 						selected.start();
 					updater.update();
 					setPlayBtn(selected.isActive());
+					btnStartStop.setEnabled(true);
 				}
 			}
 		});
@@ -415,7 +422,7 @@ public class ProbeRadar {
 		principalPanel.add(txtServerIP, "13, 6, center, center");
 
 		// Label de estatus del servidor
-		JLabel lblServerStatus = new JLabel("Server Status:");
+		lblServerStatus = new JLabel("Server Status:");
 		lblServerStatus.setFont(new Font("Dialog", Font.BOLD, 16));
 		principalPanel.add(lblServerStatus, "11, 8, right, center");
 		// Status del servidor
@@ -424,9 +431,9 @@ public class ProbeRadar {
 		principalPanel.add(txtServerStatus, "13, 8, center, center");
 
 		// Label de ultimo update
-		JLabel lblltimaActualizacin = new JLabel("Última actualización:");
-		lblltimaActualizacin.setFont(new Font("Dialog", Font.BOLD, 16));
-		principalPanel.add(lblltimaActualizacin, "11, 10, right, center");
+		lblLastUpdate = new JLabel("Última actualización:");
+		lblLastUpdate.setFont(new Font("Dialog", Font.BOLD, 16));
+		principalPanel.add(lblLastUpdate, "11, 10, right, center");
 		// Ultimo update
 		txtLastUpdate = new JLabel("-");
 		txtLastUpdate.setFont(new Font("Dialog", Font.BOLD, 16));
@@ -645,6 +652,10 @@ public class ProbeRadar {
 		lbldelaySend.setEnabled(value);
 		lblIdscanner.setEnabled(value);
 		allChannelsBtn.setEnabled(value);
+		txtServerStatus.setEnabled(value);
+		lblServerStatus.setEnabled(value);
+		txtLastUpdate.setEnabled(value);
+		lblLastUpdate.setEnabled(value);
 		for (Component c : channelsPanel.getComponents())
 			c.setEnabled(value);
 	}
