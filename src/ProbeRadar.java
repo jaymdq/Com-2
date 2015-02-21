@@ -493,6 +493,7 @@ public class ProbeRadar {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void clickAllChannelsButton(boolean value) {
 		for (Component c : channelsPanel.getComponents()) {
 			if (c.isEnabled()) {
@@ -500,6 +501,7 @@ public class ProbeRadar {
 				btn.setSelected(value);
 			}
 		}
+		selected.getConfig().channels = (Vector<String>) selected.getAllowedchannels().clone();
 		btnStartStop.setEnabled(value && validIP(txtServerIP.getText()));
 	}
 
