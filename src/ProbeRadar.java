@@ -501,7 +501,10 @@ public class ProbeRadar {
 				btn.setSelected(value);
 			}
 		}
-		selected.getConfig().channels = (Vector<String>) selected.getAllowedchannels().clone();
+		if (value)
+			selected.getConfig().channels = (Vector<String>) selected.getAllowedchannels().clone();
+		else
+			selected.getConfig().channels.clear();
 		btnStartStop.setEnabled(value && validIP(txtServerIP.getText()));
 	}
 
